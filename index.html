@@ -1013,10 +1013,10 @@
 
                 profile: {
                     name: 'Nicolas Gomes',
-                    role: 'Engenheiro de Dados Júnior',
-                    track: 'Trilha Técnica (IC - Individual Contributor)',
+                    role: 'Engenheiro de Dados',
+                    track: 'Evolução profissional',
                     area: 'Engenharia de Dados • Itaú Unibanco',
-                    longTermVision: 'Evoluir de Engenheiro de Dados Júnior para Pleno, desenvolvendo autonomia para conduzir soluções de dados de ponta a ponta e entregando resultados consistentes para o negócio. Quero fortalecer minha atuação em AWS, qualidade e governança de dados, observabilidade e eficiência, demonstrando essa evolução por meio de entregas de impacto, resolução de problemas com menor dependência e feedbacks alinhados aos critérios de progressão da empresa.',
+                    longTermVision: 'Evoluir na carreira de Engenharia de Dados, ampliando minha autonomia para conduzir soluções de ponta a ponta e gerar resultados consistentes para o negócio. Para isso, quero fortalecer minha atuação em AWS e PySpark, qualidade e governança de dados, observabilidade e eficiência, demonstrando essa evolução por meio de entregas de impacto e resolução de problemas com autonomia crescente.',
                     strategicPillars: [
                         { title: 'Arquitetura Data Mesh', description: 'Descentralização de pipelines, autonomia de domínios e criação de Data Products altamente governados.' },
                         { title: 'Engenharia de Dados em AWS', description: 'Desenvolver e evoluir soluções de dados utilizando serviços AWS e PySpark, aplicando boas práticas de qualidade, observabilidade, segurança e eficiência de custos.' },
@@ -1052,6 +1052,7 @@
                     const savedHistoryTags = localStorage.getItem('nicolas_pdi_history_tags');
                     const savedCaseStudies = localStorage.getItem('nicolas_pdi_case_studies');
                     const savedCertifications = localStorage.getItem('nicolas_pdi_certifications');
+                    let shouldPersist = false;
 
                     this.newGoal.period = this.getCurrentPeriod();
                     this.goalTags = savedGoalTags
@@ -1063,12 +1064,20 @@
                     if (savedProfile) {
                         this.profile = JSON.parse(savedProfile);
                         let profileMigrated = false;
-                        if (this.profile.role === 'Data Engineer Senior / Especialista em Dados') {
-                            this.profile.role = 'Engenheiro de Dados Júnior';
+                        if (this.profile.track === 'Trilha Técnica (IC - Individual Contributor)' || this.profile.track === 'PDI • Júnior → Pleno') {
+                            this.profile.track = 'Evolução profissional';
+                            profileMigrated = true;
+                        }
+                        if (this.profile.role === 'Data Engineer Senior / Especialista em Dados' || this.profile.role === 'Engenheiro de Dados Júnior') {
+                            this.profile.role = 'Engenheiro de Dados';
                             profileMigrated = true;
                         }
                         if (this.profile.longTermVision === 'Evoluir continuamente como Especialista/IC na Trilha Técnica de Engenharia e Arquitetura de Dados no Itaú Unibanco. Foco absoluto no ecossistema Data Mesh, descentralização de Data Products com alta governança, arquitetura Serverless em nuvem AWS e máxima eficiência computacional.') {
-                            this.profile.longTermVision = 'Evoluir de Engenheiro de Dados Júnior para Pleno, desenvolvendo autonomia para conduzir soluções de dados de ponta a ponta e entregando resultados consistentes para o negócio. Quero fortalecer minha atuação em AWS, qualidade e governança de dados, observabilidade e eficiência, demonstrando essa evolução por meio de entregas de impacto, resolução de problemas com menor dependência e feedbacks alinhados aos critérios de progressão da empresa.';
+                            this.profile.longTermVision = 'Evoluir na carreira de Engenharia de Dados, ampliando minha autonomia para conduzir soluções de ponta a ponta e gerar resultados consistentes para o negócio. Para isso, quero fortalecer minha atuação em AWS e PySpark, qualidade e governança de dados, observabilidade e eficiência, demonstrando essa evolução por meio de entregas de impacto e resolução de problemas com autonomia crescente.';
+                            profileMigrated = true;
+                        }
+                        if (this.profile.longTermVision === 'Evoluir de Engenheiro de Dados Júnior para Pleno, desenvolvendo autonomia para conduzir soluções de dados de ponta a ponta e entregando resultados consistentes para o negócio. Quero fortalecer minha atuação em AWS, qualidade e governança de dados, observabilidade e eficiência, demonstrando essa evolução por meio de entregas de impacto, resolução de problemas com menor dependência e feedbacks alinhados aos critérios de progressão da empresa.') {
+                            this.profile.longTermVision = 'Evoluir na carreira de Engenharia de Dados, ampliando minha autonomia para conduzir soluções de ponta a ponta e gerar resultados consistentes para o negócio. Para isso, quero fortalecer minha atuação em AWS e PySpark, qualidade e governança de dados, observabilidade e eficiência, demonstrando essa evolução por meio de entregas de impacto e resolução de problemas com autonomia crescente.';
                             profileMigrated = true;
                         }
                         const awsDataEngineeringPillar = (this.profile.strategicPillars || []).find(pillar => pillar.title === 'Engenharia de Dados em AWS');
@@ -1076,7 +1085,7 @@
                             awsDataEngineeringPillar.description = 'Desenvolver e evoluir soluções de dados utilizando serviços AWS e PySpark, aplicando boas práticas de qualidade, observabilidade, segurança e eficiência de custos.';
                             profileMigrated = true;
                         }
-                        if (profileMigrated) localStorage.setItem('nicolas_pdi_profile', JSON.stringify(this.profile));
+                        if (profileMigrated) shouldPersist = true;
                     }
                     if (savedCertifications) {
                         this.certifications = JSON.parse(savedCertifications);
@@ -1089,7 +1098,7 @@
                             renewable: true,
                             renewals: []
                         }];
-                        localStorage.setItem('nicolas_pdi_certifications', JSON.stringify(this.certifications));
+                        shouldPersist = true;
                     }
 
                     if (savedGoals) {
@@ -1122,7 +1131,7 @@
                                 if (this.registerGoalTag(tag)) goalsMigrated = true;
                             });
                         });
-                        if (goalsMigrated) this.saveToStorage();
+                        if (goalsMigrated) shouldPersist = true;
                     } else {
                         this.goals = [
                             {
@@ -1167,7 +1176,7 @@
                             }
                         ];
                         this.goals.forEach(goal => goal.tags.forEach(tag => this.registerGoalTag(tag)));
-                        this.saveToStorage();
+                        shouldPersist = true;
                     }
 
                     if (savedLogs) {
@@ -1188,7 +1197,7 @@
                                 if (this.registerHistoryTag(tag)) logsMigrated = true;
                             });
                         });
-                        if (logsMigrated) this.saveToStorage();
+                        if (logsMigrated) shouldPersist = true;
                     } else {
                         this.logs = [
                             {
@@ -1207,17 +1216,18 @@
                             }
                         ];
                         this.logs.forEach(log => log.tags.forEach(tag => this.registerHistoryTag(tag)));
-                        this.saveToStorage();
+                        shouldPersist = true;
                     }
 
                     if (savedCaseStudies) {
                         this.caseStudies = JSON.parse(savedCaseStudies);
                     } else {
                         this.caseStudies = [this.getDefaultCaseStudy()];
-                        this.saveToStorage();
+                        shouldPersist = true;
                     }
 
-                    this.refreshIcons();
+                    if (shouldPersist) this.saveToStorage();
+                    else this.refreshIcons();
                 },
 
                 refreshIcons() {
@@ -1538,8 +1548,15 @@
                     const goal = this.goals.find(g => g.id === goalId);
                     if (goal) {
                         goal.status = newStatus;
-                        if (newStatus === 'Concluído' && goal.tasks) {
-                            goal.tasks.forEach(t => t.done = true);
+                        if (goal.tasks && goal.tasks.length > 0) {
+                            if (newStatus === 'Concluído') {
+                                goal.tasks.forEach(task => task.done = true);
+                            } else if (newStatus === 'Planejado') {
+                                goal.tasks.forEach(task => task.done = false);
+                            } else if (newStatus === 'Em Andamento') {
+                                if (goal.tasks.every(task => task.done)) goal.tasks[goal.tasks.length - 1].done = false;
+                                else if (goal.tasks.every(task => !task.done)) goal.tasks[0].done = true;
+                            }
                         }
                         this.saveToStorage();
                         this.showToast(`Status alterado para: ${newStatus}`, 'info');
