@@ -145,13 +145,13 @@
                         <span>Gerar PDF</span>
                     </button>
 
-                    <button @click="openModal('goal')" 
+                    <button x-show="!isPresentationMode" @click="openGoalModal()"
                             class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-itau-orange hover:bg-itau-orangeHover text-white font-bold text-xs shadow-lg shadow-itau-orange/20 transition-all active:scale-95">
                         <i data-lucide="plus" class="w-4 h-4"></i>
                         <span>Nova Meta</span>
                     </button>
 
-                    <div class="relative" x-data="{ open: false }">
+                    <div x-show="!isPresentationMode" class="relative" x-data="{ open: false }">
                         <button @click="open = !open" @click.outside="open = false" 
                                 class="p-2 rounded-xl bg-itau-cardBg hover:bg-itau-navy text-gray-300 border border-gray-700/80 transition-all">
                             <i data-lucide="settings" class="w-4 h-4"></i>
@@ -159,6 +159,9 @@
                         <div x-show="open" x-transition class="absolute right-0 mt-2 w-48 bg-itau-darkNavy border border-gray-800 rounded-xl shadow-2xl py-1.5 z-50">
                             <button @click="openModal('editProfile'); open = false" class="w-full text-left px-4 py-2 text-xs font-medium text-gray-200 hover:bg-itau-navy flex items-center gap-2">
                                 <i data-lucide="user-cog" class="w-4 h-4 text-itau-orange"></i> Editar Visão
+                            </button>
+                            <button @click="openTagSettings(); open = false" class="w-full text-left px-4 py-2 text-xs font-medium text-gray-200 hover:bg-itau-navy flex items-center gap-2">
+                                <i data-lucide="tags" class="w-4 h-4 text-emerald-400"></i> Gerenciar Tags
                             </button>
                             <button @click="exportData(); open = false" class="w-full text-left px-4 py-2 text-xs font-medium text-gray-200 hover:bg-itau-navy flex items-center gap-2">
                                 <i data-lucide="download" class="w-4 h-4 text-blue-400"></i> Exportar JSON
@@ -188,19 +191,19 @@
             <div class="flex items-center justify-between">
                 <div class="flex items-center gap-2">
                     <div class="w-2.5 h-6 bg-itau-orange rounded-full"></div>
-                    <h2 class="text-xl font-extrabold text-white tracking-tight">Trilha Técnica & Visão de Carreira (IC / Especialista)</h2>
+                    <h2 class="text-xl font-extrabold text-white tracking-tight">Objetivo de Carreira & Trilha Técnica</h2>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 gap-6">
                 
                 <!-- Bloco de Visão do Nicolas -->
-                <div class="lg:col-span-2 bg-gradient-to-br from-itau-cardBg via-itau-darkNavy to-itau-bbaDark border border-itau-navy/80 rounded-2xl p-6 shadow-2xl relative overflow-hidden print-card">
+                <div class="bg-gradient-to-br from-itau-cardBg via-itau-darkNavy to-itau-bbaDark border border-itau-navy/80 rounded-2xl p-6 shadow-2xl relative overflow-hidden print-card">
                     <div class="space-y-4">
                         <div class="flex items-center justify-between border-b border-gray-800 pb-3">
                             <span class="text-xs font-bold uppercase tracking-wider text-itau-orange flex items-center gap-1.5">
                                 <i data-lucide="code" class="w-4 h-4"></i>
-                                Foco: Contribuidor Individual (IC) / Especialista Técnico
+                                Evolução de carreira: Júnior → Pleno
                             </span>
                             <span class="text-[10px] bg-itau-navy text-blue-200 border border-blue-400/20 px-2 py-0.5 rounded-md font-mono">Arquitetura Data Mesh</span>
                         </div>
@@ -229,47 +232,73 @@
                     </div>
                 </div>
 
-                <!-- Certificações AWS & Educação -->
-                <div class="bg-itau-cardBg border border-itau-navy/80 rounded-2xl p-6 flex flex-col justify-between shadow-2xl print-card">
-                    <div class="space-y-4">
-                        <div class="flex items-center justify-between border-b border-gray-800 pb-3">
-                            <span class="text-xs font-bold uppercase tracking-wider text-itau-orange flex items-center gap-1.5">
-                                <i data-lucide="award" class="w-4 h-4"></i>
-                                Certificações AWS
-                            </span>
-                        </div>
-
-                        <div class="space-y-3">
-                            <!-- Cloud Practitioner -->
-                            <div class="bg-itau-darkNavy p-3 rounded-xl border border-emerald-500/30 print-card">
-                                <div class="flex items-center justify-between">
-                                    <span class="text-xs font-bold text-emerald-300">AWS Cloud Practitioner</span>
-                                    <span class="text-[10px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded font-mono font-bold">Ativa</span>
-                                </div>
-                                <p class="text-[11px] text-gray-400 mt-1">Obtida há 3 anos • **Renovada recentemente (mês passado)**</p>
-                            </div>
-
-                            <!-- Solutions Architect -->
-                            <div class="bg-itau-darkNavy p-3 rounded-xl border border-amber-500/40 print-card">
-                                <div class="flex items-center justify-between">
-                                    <span class="text-xs font-bold text-amber-300">AWS Solutions Architect - Assoc.</span>
-                                    <span class="text-[10px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded font-mono font-bold">Mês Que Vem</span>
-                                </div>
-                                <p class="text-[11px] text-gray-400 mt-1">Em reta final de preparação para exame oficial (SAA-C03).</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="mt-4 pt-4 border-t border-gray-800 text-center">
-                        <span class="text-[11px] text-gray-400 italic block">"Aprofundando arquitetura AWS e governança descentralizada em Data Mesh."</span>
-                    </div>
-                </div>
-
             </div>
         </section>
 
         <!-- ========================================== -->
-        <!-- SEÇÃO 2: CASE DE SUCESSO DE EM DESTAQUE -->
+        <!-- SEÇÃO 2: CERTIFICAÇÕES -->
+        <!-- ========================================== -->
+        <section class="space-y-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <div class="w-2.5 h-6 bg-amber-500 rounded-full"></div>
+                    <h2 class="text-xl font-extrabold text-white tracking-tight">Certificações</h2>
+                </div>
+                <button x-show="!isPresentationMode" @click="openCertificationModal()" class="no-print inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-itau-orange hover:bg-itau-orangeHover text-white text-xs font-bold transition-all">
+                    <i data-lucide="plus" class="w-4 h-4"></i>
+                    <span>Nova Certificação</span>
+                </button>
+            </div>
+
+            <div class="bg-itau-cardBg border border-itau-navy/80 rounded-2xl p-6 shadow-2xl print-card">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3" x-show="certifications.length > 0">
+                    <template x-for="certification in certifications" :key="certification.id">
+                        <article class="bg-itau-darkNavy p-4 rounded-xl border border-gray-800 print-card">
+                            <div class="flex items-start justify-between gap-3">
+                                <div>
+                                    <h3 class="text-sm font-bold text-white" x-text="certification.name"></h3>
+                                    <span class="inline-flex mt-2 text-[10px] px-2 py-0.5 rounded font-mono font-bold border"
+                                          :class="getCertificationStatusStyle(getCurrentCertificationPeriod(certification))"
+                                          x-text="getCertificationStatus(getCurrentCertificationPeriod(certification))"></span>
+                                </div>
+                                <div x-show="!isPresentationMode" class="no-print flex items-center gap-1 shrink-0">
+                                    <button @click="editCertification(certification)" class="p-1.5 rounded-lg text-gray-400 hover:text-white hover:bg-gray-700" :aria-label="`Editar ${certification.name}`">
+                                        <i data-lucide="pencil" class="w-4 h-4"></i>
+                                    </button>
+                                    <button @click="deleteCertification(certification.id)" class="p-1.5 rounded-lg text-gray-400 hover:text-rose-400 hover:bg-rose-500/10" :aria-label="`Excluir ${certification.name}`">
+                                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <p class="text-[11px] text-gray-400 mt-3" x-show="getCurrentCertificationPeriod(certification).startDate && getCurrentCertificationPeriod(certification).endDate">
+                                Vigência:
+                                <span x-text="formatDate(getCurrentCertificationPeriod(certification).startDate)"></span>
+                                até
+                                <span x-text="formatDate(getCurrentCertificationPeriod(certification).endDate)"></span>
+                            </p>
+                            <p class="text-[11px] text-gray-500 mt-3" x-show="!getCurrentCertificationPeriod(certification).startDate || !getCurrentCertificationPeriod(certification).endDate">
+                                Informe o período de vigência ao editar esta certificação.
+                            </p>
+                            <p class="text-[10px] text-gray-500 mt-1"
+                               x-show="getCurrentCertificationPeriod(certification).isRenewal">
+                                Renovação mais vigente
+                            </p>
+                        </article>
+                    </template>
+                </div>
+                <div x-show="certifications.length === 0" class="text-center py-6">
+                    <p class="text-sm text-gray-300">Nenhuma certificação cadastrada.</p>
+                    <p class="text-xs text-gray-500 mt-1">Cadastre uma certificação para acompanhar sua vigência e renovações.</p>
+                </div>
+
+                <div x-show="certifications.length > 0" class="mt-4 pt-4 border-t border-gray-800 text-center">
+                    <span class="text-[11px] text-gray-400 italic block">"Aprofundando conhecimentos em Tecnologia."</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- SEÇÃO 3: CASE DE SUCESSO EM DESTAQUE -->
         <!-- ========================================== -->
         <section class="space-y-4">
             <div class="flex items-center justify-between">
@@ -386,7 +415,7 @@
         </section>
 
         <!-- ========================================== -->
-        <!-- SEÇÃO 3: METAS E ROADMAP TÉCNICO (DATA MESH) -->
+        <!-- SEÇÃO 4: METAS E ROADMAP TÉCNICO (DATA MESH) -->
         <!-- ========================================== -->
         <section class="space-y-6">
             
@@ -415,20 +444,30 @@
             <div class="bg-itau-cardBg/80 p-4 rounded-2xl border border-itau-navy/80 space-y-3 no-print">
                 <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                     
-                    <div class="flex items-center gap-1.5 overflow-x-auto pb-2 lg:pb-0 scrollbar-none">
-                        <template x-for="pilar in pillars" :key="pilar.id">
-                            <button @click="selectedPillar = pilar.id" 
-                                    class="px-3 py-1.5 rounded-xl text-xs font-semibold transition-all whitespace-nowrap flex items-center gap-1.5 border"
-                                    :class="selectedPillar === pilar.id 
-                                        ? 'bg-itau-orange text-white border-amber-400 shadow-md shadow-itau-orange/20' 
-                                        : 'bg-itau-darkNavy text-gray-400 border-gray-800 hover:bg-itau-navy hover:text-white'">
-                                <i :data-lucide="pilar.icon" class="w-3.5 h-3.5"></i>
-                                <span x-text="pilar.name"></span>
-                            </button>
-                        </template>
-                    </div>
-
                     <div class="flex flex-wrap items-center gap-2.5">
+                        <div class="relative" x-data="{ open: false }" @click.outside="open = false">
+                            <button type="button" @click="open = !open"
+                                    class="min-w-44 px-3 py-2 rounded-xl border border-gray-800 bg-itau-darkNavy text-xs text-gray-200 flex items-center justify-between gap-3">
+                                <span x-text="selectedTags.length ? `${selectedTags.length} tags selecionadas` : 'Todas as tags'"></span>
+                                <i data-lucide="chevron-down" class="w-3.5 h-3.5"></i>
+                            </button>
+                            <div x-show="open" x-transition class="absolute left-0 mt-2 w-64 bg-itau-darkNavy border border-gray-800 rounded-xl shadow-2xl p-3 z-30 space-y-2">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-[11px] font-bold uppercase tracking-wider text-gray-400">Filtrar por tags</span>
+                                    <button type="button" @click="selectedTags = []" class="text-[11px] text-itau-orange hover:underline">Limpar</button>
+                                </div>
+                                <div class="max-h-40 overflow-y-auto space-y-1">
+                                    <template x-for="tag in goalTags" :key="tag">
+                                        <label class="flex items-center gap-2 rounded-lg px-2 py-1.5 text-xs text-gray-200 hover:bg-itau-navy cursor-pointer">
+                                            <input type="checkbox" :checked="selectedTags.includes(tag)" @change="toggleSelectedTag(tag)" class="rounded border-gray-700 bg-itau-cardBg text-itau-orange focus:ring-itau-orange">
+                                            <span x-text="tag"></span>
+                                        </label>
+                                    </template>
+                                    <p x-show="goalTags.length === 0" class="text-xs text-gray-500 px-2 py-1">Cadastre tags ao editar ou criar uma meta.</p>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="relative flex-1 sm:w-44">
                             <i data-lucide="search" class="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"></i>
                             <input type="text" x-model="searchQuery" placeholder="Filtrar meta..." 
@@ -441,8 +480,22 @@
                             <option value="Planejado">Planejado</option>
                             <option value="Concluído">Concluído</option>
                         </select>
+                        <select x-model="selectedPeriod" class="bg-itau-darkNavy text-xs text-gray-200 px-3 py-2 rounded-xl border border-gray-800 focus:outline-none focus:border-itau-orange cursor-pointer" aria-label="Filtrar por semestre">
+                            <option value="all">Todos os Semestres</option>
+                            <template x-for="period in availableGoalPeriods" :key="period">
+                                <option :value="period" x-text="formatGoalPeriod(period)"></option>
+                            </template>
+                        </select>
                     </div>
 
+                </div>
+                <div x-show="selectedTags.length > 0" class="flex flex-wrap gap-1.5">
+                    <template x-for="tag in selectedTags" :key="tag">
+                        <button type="button" @click="toggleSelectedTag(tag)" class="px-2 py-1 rounded-md border border-itau-orange/30 bg-itau-orange/10 text-[10px] text-itau-orange flex items-center gap-1">
+                            <span x-text="tag"></span>
+                            <i data-lucide="x" class="w-3 h-3"></i>
+                        </button>
+                    </template>
                 </div>
             </div>
 
@@ -453,13 +506,12 @@
                         
                         <div class="space-y-3">
                             <div class="flex items-start justify-between gap-2">
-                                <span class="px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 border"
-                                      :class="getPilarStyle(goal.pillar)">
-                                    <i :data-lucide="getPilarIcon(goal.pillar)" class="w-3 h-3"></i>
-                                    <span x-text="goal.pillar"></span>
-                                </span>
-
-                                <span class="text-[11px] font-mono font-bold text-itau-orange bg-itau-orange/10 px-2 py-0.5 rounded border border-itau-orange/20" x-text="goal.quarter"></span>
+                                <div class="flex flex-wrap gap-1.5">
+                                    <template x-for="tag in goal.tags || []" :key="tag">
+                                        <span class="px-2 py-0.5 rounded-md text-[10px] font-bold border" :class="getTagStyle(tag)" x-text="tag"></span>
+                                    </template>
+                                </div>
+                                <span class="text-[11px] font-mono font-bold text-itau-orange bg-itau-orange/10 px-2 py-0.5 rounded border border-itau-orange/20" x-text="formatGoalPeriod(goal.period)"></span>
                             </div>
 
                             <div>
@@ -491,15 +543,16 @@
                                     <label class="flex items-start gap-2 cursor-pointer text-xs select-none">
                                         <input type="checkbox" 
                                                :checked="task.done" 
+                                               :disabled="isPresentationMode"
                                                @change="toggleTask(goal.id, idx)"
-                                               class="mt-0.5 rounded border-gray-700 bg-itau-cardBg text-itau-orange focus:ring-itau-orange no-print">
+                                               class="mt-0.5 rounded border-gray-700 bg-itau-cardBg text-itau-orange focus:ring-itau-orange no-print disabled:cursor-default">
                                         <span class="text-gray-300 print-text-dark" :class="{ 'line-through text-gray-500': task.done }" x-text="task.text"></span>
                                     </label>
                                 </template>
                             </div>
 
                             <div class="flex items-center justify-between pt-2 border-t border-gray-800 text-xs">
-                                <div class="relative no-print" x-data="{ statusOpen: false }">
+                                <div x-show="!isPresentationMode" class="relative no-print" x-data="{ statusOpen: false }">
                                     <button @click="statusOpen = !statusOpen" @click.outside="statusOpen = false"
                                             class="px-2.5 py-1 rounded-md text-[11px] font-bold flex items-center gap-1 border"
                                             :class="getStatusStyle(goal.status)">
@@ -513,9 +566,16 @@
                                     </div>
                                 </div>
 
-                                <button @click="deleteGoal(goal.id)" class="no-print text-gray-500 hover:text-rose-400 p-1" title="Excluir Meta">
-                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
-                                </button>
+                                <span x-show="isPresentationMode" class="px-2.5 py-1 rounded-md text-[11px] font-bold border" :class="getStatusStyle(goal.status)" x-text="goal.status"></span>
+
+                                <div x-show="!isPresentationMode" class="flex items-center gap-1">
+                                    <button @click="editGoal(goal)" class="no-print text-gray-500 hover:text-itau-orange p-1" title="Editar Meta">
+                                        <i data-lucide="pencil" class="w-4 h-4"></i>
+                                    </button>
+                                    <button @click="deleteGoal(goal.id)" class="no-print text-gray-500 hover:text-rose-400 p-1" title="Excluir Meta">
+                                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                    </button>
+                                </div>
                             </div>
 
                         </div>
@@ -527,7 +587,7 @@
         </section>
 
         <!-- ========================================== -->
-        <!-- SEÇÃO 4: HISTÓRICO DE ENTREGAS & TIMELINE -->
+        <!-- SEÇÃO 5: HISTÓRICO DE ENTREGAS & TIMELINE -->
         <!-- ========================================== -->
         <section class="space-y-4 pt-4">
             <div class="flex items-center justify-between">
@@ -535,14 +595,37 @@
                     <div class="w-2.5 h-6 bg-emerald-500 rounded-full"></div>
                     <h2 class="text-xl font-extrabold text-white tracking-tight">Histórico de Conquistas & Projetos</h2>
                 </div>
-                <button @click="openModal('log')" class="no-print text-xs text-emerald-400 hover:underline font-semibold flex items-center gap-1">
-                    <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i> Nova Conquista
-                </button>
+                <div class="flex items-center gap-3">
+                    <div class="relative no-print" x-data="{ open: false }" @click.outside="open = false" x-show="!isPresentationMode">
+                        <button type="button" @click="open = !open" class="min-w-40 px-3 py-2 rounded-xl border border-gray-800 bg-itau-darkNavy text-xs text-gray-200 flex items-center justify-between gap-3">
+                            <span x-text="selectedLogTags.length ? `${selectedLogTags.length} tags selecionadas` : 'Todas as tags'"></span>
+                            <i data-lucide="chevron-down" class="w-3.5 h-3.5"></i>
+                        </button>
+                        <div x-show="open" x-transition class="absolute right-0 mt-2 w-64 bg-itau-darkNavy border border-gray-800 rounded-xl shadow-2xl p-3 z-30 space-y-2">
+                            <div class="flex items-center justify-between">
+                                <span class="text-[11px] font-bold uppercase tracking-wider text-gray-400">Filtrar por tags</span>
+                                <button type="button" @click="selectedLogTags = []" class="text-[11px] text-itau-orange hover:underline">Limpar</button>
+                            </div>
+                            <div class="max-h-40 overflow-y-auto space-y-1">
+                                <template x-for="tag in historyTags" :key="tag">
+                                    <label class="flex items-center gap-2 rounded-lg px-2 py-1.5 text-xs text-gray-200 hover:bg-itau-navy cursor-pointer">
+                                        <input type="checkbox" :checked="selectedLogTags.includes(tag)" @change="toggleSelectedLogTag(tag)" class="rounded border-gray-700 bg-itau-cardBg text-itau-orange focus:ring-itau-orange">
+                                        <span x-text="tag"></span>
+                                    </label>
+                                </template>
+                                <p x-show="historyTags.length === 0" class="text-xs text-gray-500 px-2 py-1">Nenhuma tag cadastrada.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <button x-show="!isPresentationMode" @click="openLogModal()" class="no-print text-xs text-emerald-400 hover:underline font-semibold flex items-center gap-1">
+                        <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i> Nova Conquista
+                    </button>
+                </div>
             </div>
 
             <div class="bg-itau-cardBg border border-itau-navy rounded-2xl p-6 relative print-card">
                 <div class="relative border-l-2 border-itau-navy ml-3 space-y-6">
-                    <template x-for="log in logs" :key="log.id">
+                    <template x-for="log in filteredLogs" :key="log.id">
                         <div class="relative pl-6 group">
                             <div class="absolute -left-[9px] top-1.5 w-4 h-4 rounded-full bg-itau-darkNavy border-2 border-itau-orange"></div>
                             
@@ -559,25 +642,27 @@
                                             <span class="text-[10px] bg-blue-900/40 text-blue-300 px-2 py-0.5 rounded border border-blue-500/20" x-text="`#${tag}`"></span>
                                         </template>
                                     </div>
-                                    <button @click="deleteLog(log.id)" class="no-print text-gray-600 hover:text-rose-400 text-xs">
+                                    <button x-show="!isPresentationMode" @click="deleteLog(log.id)" class="no-print text-gray-600 hover:text-rose-400 text-xs">
                                         <i data-lucide="x" class="w-3.5 h-3.5"></i>
                                     </button>
                                 </div>
                             </div>
                         </div>
                     </template>
+                    <p x-show="filteredLogs.length === 0" class="pl-6 text-xs text-gray-500">Nenhuma conquista encontrada para as tags selecionadas.</p>
                 </div>
             </div>
         </section>
 
     </main>
 
-    <!-- Modal Nova Meta -->
+    <!-- Modal Nova/Editar Meta -->
     <div x-show="modals.goal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm no-print" x-transition>
-        <div @click.outside="closeModal('goal')" class="bg-itau-darkNavy border border-itau-navy w-full max-w-lg rounded-2xl shadow-2xl p-6 space-y-4">
+        <div @click.outside="closeModal('goal')" class="bg-itau-darkNavy border border-itau-navy w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl shadow-2xl p-6 space-y-4">
             <div class="flex items-center justify-between border-b border-gray-800 pb-3">
                 <h3 class="text-base font-bold text-white flex items-center gap-2">
-                    <i data-lucide="plus-circle" class="w-5 h-5 text-itau-orange"></i> Nova Meta Técnica
+                    <i :data-lucide="editingGoalId === null ? 'plus-circle' : 'pencil'" class="w-5 h-5 text-itau-orange"></i>
+                    <span x-text="editingGoalId === null ? 'Nova Meta Técnica' : 'Editar Meta Técnica'"></span>
                 </h3>
                 <button @click="closeModal('goal')" class="text-gray-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
             </div>
@@ -588,20 +673,13 @@
                     <input type="text" x-model="newGoal.title" required placeholder="Ex: Criação do Data Product de Transações" class="w-full bg-itau-cardBg text-xs text-white px-3 py-2 rounded-xl border border-gray-800 focus:outline-none focus:border-itau-orange">
                 </div>
 
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-xs font-medium text-gray-300 mb-1">Pilar Técnico</label>
-                        <select x-model="newGoal.pillar" class="w-full bg-itau-cardBg text-xs text-white px-3 py-2 rounded-xl border border-gray-800 focus:outline-none focus:border-itau-orange">
-                            <option value="Arquitetura AWS Serverless">Arquitetura AWS Serverless</option>
-                            <option value="Data Mesh & Governança">Data Mesh & Governança</option>
-                            <option value="Certificações AWS">Certificações AWS</option>
-                            <option value="Performance & FinOps">Performance & FinOps</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-gray-300 mb-1">Quarter / Prazo</label>
-                        <input type="text" x-model="newGoal.quarter" placeholder="Ex: Q4 2026" required class="w-full bg-itau-cardBg text-xs text-white px-3 py-2 rounded-xl border border-gray-800 focus:outline-none focus:border-itau-orange">
-                    </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-300 mb-1">Semestre / Ano</label>
+                    <select x-model="newGoal.period" required class="w-full bg-itau-cardBg text-xs text-white px-3 py-2 rounded-xl border border-gray-800 focus:outline-none focus:border-itau-orange">
+                        <template x-for="period in semesterOptions" :key="period">
+                            <option :value="period" x-text="formatGoalPeriod(period)"></option>
+                        </template>
+                    </select>
                 </div>
 
                 <div>
@@ -614,9 +692,114 @@
                     <textarea x-model="newGoal.description" rows="2" class="w-full bg-itau-cardBg text-xs text-white px-3 py-2 rounded-xl border border-gray-800 focus:outline-none focus:border-itau-orange"></textarea>
                 </div>
 
+                <div class="space-y-2">
+                    <label class="block text-xs font-medium text-gray-300">Tags</label>
+                    <div class="flex flex-wrap gap-2">
+                        <template x-for="tag in goalTags" :key="tag">
+                            <label class="flex items-center gap-1.5 px-2 py-1 rounded-lg border border-gray-800 bg-itau-cardBg text-[11px] text-gray-300 cursor-pointer">
+                                <input type="checkbox" :value="tag" x-model="newGoal.tags" class="rounded border-gray-700 bg-itau-darkNavy text-itau-orange focus:ring-itau-orange">
+                                <span x-text="tag"></span>
+                            </label>
+                        </template>
+                        <span x-show="goalTags.length === 0" class="text-[11px] text-gray-500">Cadastre tags em Configurações → Gerenciar Tags.</span>
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <div class="flex items-center justify-between">
+                        <label class="block text-xs font-medium text-gray-300">Etapas / tarefas</label>
+                        <button type="button" @click="addGoalTask()" class="text-xs text-itau-orange hover:underline">Adicionar tarefa</button>
+                    </div>
+                    <template x-for="(task, idx) in newGoal.tasks" :key="idx">
+                        <div class="flex items-center gap-2">
+                            <input type="checkbox" x-model="task.done" class="rounded border-gray-700 bg-itau-cardBg text-itau-orange focus:ring-itau-orange" aria-label="Tarefa concluída">
+                            <input type="text" x-model="task.text" placeholder="Descreva uma etapa da meta" class="min-w-0 flex-1 bg-itau-cardBg text-xs text-white px-3 py-2 rounded-xl border border-gray-800 focus:outline-none focus:border-itau-orange">
+                            <button type="button" @click="removeGoalTask(idx)" class="text-gray-500 hover:text-rose-400 p-1" title="Remover tarefa" aria-label="Remover tarefa">
+                                <i data-lucide="x" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </template>
+                </div>
+
                 <div class="pt-3 border-t border-gray-800 flex justify-end gap-2">
                     <button type="button" @click="closeModal('goal')" class="px-4 py-2 rounded-xl bg-itau-cardBg text-xs text-gray-300">Cancelar</button>
-                    <button type="submit" class="px-4 py-2 rounded-xl bg-itau-orange text-xs text-white font-bold hover:bg-itau-orangeHover">Salvar Meta</button>
+                    <button type="submit" class="px-4 py-2 rounded-xl bg-itau-orange text-xs text-white font-bold hover:bg-itau-orangeHover" x-text="editingGoalId === null ? 'Salvar Meta' : 'Salvar Alterações'"></button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Cadastrar Certificação -->
+    <div x-show="modals.certification" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm no-print" x-transition>
+        <div @click.outside="closeModal('certification')" class="bg-itau-darkNavy border border-itau-navy w-full max-w-xl max-h-[90vh] overflow-y-auto rounded-2xl shadow-2xl p-6 space-y-4">
+            <div class="flex items-center justify-between border-b border-gray-800 pb-3">
+                <h3 class="text-base font-bold text-white flex items-center gap-2">
+                    <i data-lucide="award" class="w-5 h-5 text-itau-orange"></i>
+                    <span x-text="editingCertificationId ? 'Editar Certificação' : 'Nova Certificação'"></span>
+                </h3>
+                <button type="button" @click="closeModal('certification')" class="text-gray-400 hover:text-white" aria-label="Fechar">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <form @submit.prevent="saveCertification()" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-medium text-gray-300 mb-1">Nome da certificação</label>
+                    <input type="text" x-model="newCertification.name" required placeholder="Ex: AWS Certified Cloud Practitioner" class="w-full bg-itau-cardBg text-xs text-white px-3 py-2 rounded-xl border border-gray-800 focus:outline-none focus:border-itau-orange">
+                </div>
+
+                <div>
+                    <h4 class="text-xs font-bold text-gray-300 mb-2">Vigência inicial</h4>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-medium text-gray-400 mb-1">Data de início</label>
+                            <input type="date" x-model="newCertification.startDate" required :max="newCertification.endDate || null" class="w-full bg-itau-cardBg text-xs text-white px-3 py-2 rounded-xl border border-gray-800">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-gray-400 mb-1">Data de término</label>
+                            <input type="date" x-model="newCertification.endDate" required :min="newCertification.startDate || null" class="w-full bg-itau-cardBg text-xs text-white px-3 py-2 rounded-xl border border-gray-800">
+                        </div>
+                    </div>
+                </div>
+
+                <label class="flex items-center gap-2 text-xs text-gray-300 cursor-pointer">
+                    <input type="checkbox" x-model="newCertification.renewable" class="rounded border-gray-700 bg-itau-cardBg text-itau-orange focus:ring-itau-orange">
+                    Esta certificação pode ser renovada
+                </label>
+
+                <div x-show="newCertification.renewable" class="space-y-3 border-t border-gray-800 pt-3">
+                    <div class="flex items-center justify-between gap-3">
+                        <h4 class="text-xs font-bold text-gray-300">Renovações</h4>
+                        <button type="button" @click="addCertificationRenewal()" class="inline-flex items-center gap-1 text-[11px] font-semibold text-itau-orange hover:text-orange-300">
+                            <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                            Adicionar renovação
+                        </button>
+                    </div>
+
+                    <template x-for="(renewal, index) in newCertification.renewals" :key="index">
+                        <div class="bg-itau-cardBg border border-gray-800 rounded-xl p-3 space-y-2">
+                            <div class="flex items-center justify-between">
+                                <span class="text-[11px] font-semibold text-gray-300" x-text="`Renovação ${index + 1}`"></span>
+                                <button type="button" @click="removeCertificationRenewal(index)" class="text-[11px] text-rose-400 hover:text-rose-300">Remover</button>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-xs font-medium text-gray-400 mb-1">Início da vigência</label>
+                                    <input type="date" x-model="renewal.startDate" :required="newCertification.renewable" :max="renewal.endDate || null" class="w-full bg-itau-darkNavy text-xs text-white px-3 py-2 rounded-xl border border-gray-700">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-gray-400 mb-1">Fim da vigência</label>
+                                    <input type="date" x-model="renewal.endDate" :required="newCertification.renewable" :min="renewal.startDate || null" class="w-full bg-itau-darkNavy text-xs text-white px-3 py-2 rounded-xl border border-gray-700">
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                    <p class="text-[10px] text-gray-500">O histórico fica salvo; o painel mostra apenas a vigência mais atual.</p>
+                </div>
+
+                <div class="pt-3 border-t border-gray-800 flex justify-end gap-2">
+                    <button type="button" @click="closeModal('certification')" class="px-4 py-2 rounded-xl bg-itau-cardBg text-xs text-gray-300">Cancelar</button>
+                    <button type="submit" class="px-4 py-2 rounded-xl bg-itau-orange text-xs text-white font-bold hover:bg-itau-orangeHover">Salvar Certificação</button>
                 </div>
             </form>
         </div>
@@ -657,6 +840,90 @@
         </div>
     </div>
 
+    <!-- Modal Gerenciar Tags -->
+    <div x-show="modals.tags" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm no-print" x-transition>
+        <div @click.outside="closeModal('tags')" class="bg-itau-darkNavy border border-itau-navy w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl shadow-2xl p-6 space-y-5">
+            <div class="flex items-center justify-between border-b border-gray-800 pb-3">
+                <h3 class="text-base font-bold text-white flex items-center gap-2">
+                    <i data-lucide="tags" class="w-5 h-5 text-emerald-400"></i> Gerenciar Tags
+                </h3>
+                <button @click="closeModal('tags')" class="text-gray-400 hover:text-white" aria-label="Fechar">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <p class="text-xs text-gray-400">Renomear uma tag atualiza os registros associados. Excluir remove a tag das metas ou conquistas vinculadas.</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <section class="space-y-3">
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-gray-300">Tags das metas</h4>
+                    <form @submit.prevent="addManagedTag('goals')" class="flex gap-2">
+                        <input type="text" x-model="newTagInputs.goals" placeholder="Nova tag" class="min-w-0 flex-1 bg-itau-cardBg text-xs text-white px-3 py-2 rounded-xl border border-gray-800 focus:outline-none focus:border-itau-orange">
+                        <button type="submit" class="px-3 py-2 rounded-xl bg-itau-orange text-xs text-white font-bold">Adicionar</button>
+                    </form>
+                    <div class="space-y-2">
+                        <template x-for="tag in goalTags" :key="tag">
+                            <div class="flex items-center gap-2 bg-itau-cardBg border border-gray-800 rounded-xl p-2">
+                                <template x-if="tagManagement.scope === 'goals' && tagManagement.original === tag">
+                                    <form @submit.prevent="saveTagRename('goals')" class="flex flex-1 gap-1.5">
+                                        <input type="text" x-model="tagManagement.renamed" class="min-w-0 flex-1 bg-itau-darkNavy text-xs text-white px-2 py-1.5 rounded-lg border border-gray-700">
+                                        <button type="submit" class="text-emerald-400 text-xs" aria-label="Salvar nome da tag"><i data-lucide="check" class="w-4 h-4"></i></button>
+                                        <button type="button" @click="cancelTagRename()" class="text-gray-400 text-xs" aria-label="Cancelar edição"><i data-lucide="x" class="w-4 h-4"></i></button>
+                                    </form>
+                                </template>
+                                <template x-if="tagManagement.scope !== 'goals' || tagManagement.original !== tag">
+                                    <span class="flex-1 text-xs text-gray-200" x-text="tag"></span>
+                                </template>
+                                <button type="button" @click="startTagRename('goals', tag)" class="text-gray-400 hover:text-itau-orange" :aria-label="`Renomear ${tag}`" title="Renomear">
+                                    <i data-lucide="pencil" class="w-4 h-4"></i>
+                                </button>
+                                <button type="button" @click="deleteManagedTag('goals', tag)" class="text-gray-500 hover:text-rose-400" :aria-label="`Excluir ${tag}`" title="Excluir">
+                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </template>
+                        <p x-show="goalTags.length === 0" class="text-xs text-gray-500">Nenhuma tag cadastrada.</p>
+                    </div>
+                </section>
+
+                <section class="space-y-3">
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-gray-300">Tags do histórico</h4>
+                    <form @submit.prevent="addManagedTag('history')" class="flex gap-2">
+                        <input type="text" x-model="newTagInputs.history" placeholder="Nova tag" class="min-w-0 flex-1 bg-itau-cardBg text-xs text-white px-3 py-2 rounded-xl border border-gray-800 focus:outline-none focus:border-itau-orange">
+                        <button type="submit" class="px-3 py-2 rounded-xl bg-itau-orange text-xs text-white font-bold">Adicionar</button>
+                    </form>
+                    <div class="space-y-2">
+                        <template x-for="tag in historyTags" :key="tag">
+                            <div class="flex items-center gap-2 bg-itau-cardBg border border-gray-800 rounded-xl p-2">
+                                <template x-if="tagManagement.scope === 'history' && tagManagement.original === tag">
+                                    <form @submit.prevent="saveTagRename('history')" class="flex flex-1 gap-1.5">
+                                        <input type="text" x-model="tagManagement.renamed" class="min-w-0 flex-1 bg-itau-darkNavy text-xs text-white px-2 py-1.5 rounded-lg border border-gray-700">
+                                        <button type="submit" class="text-emerald-400 text-xs" aria-label="Salvar nome da tag"><i data-lucide="check" class="w-4 h-4"></i></button>
+                                        <button type="button" @click="cancelTagRename()" class="text-gray-400 text-xs" aria-label="Cancelar edição"><i data-lucide="x" class="w-4 h-4"></i></button>
+                                    </form>
+                                </template>
+                                <template x-if="tagManagement.scope !== 'history' || tagManagement.original !== tag">
+                                    <span class="flex-1 text-xs text-gray-200" x-text="tag"></span>
+                                </template>
+                                <button type="button" @click="startTagRename('history', tag)" class="text-gray-400 hover:text-itau-orange" :aria-label="`Renomear ${tag}`" title="Renomear">
+                                    <i data-lucide="pencil" class="w-4 h-4"></i>
+                                </button>
+                                <button type="button" @click="deleteManagedTag('history', tag)" class="text-gray-500 hover:text-rose-400" :aria-label="`Excluir ${tag}`" title="Excluir">
+                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </template>
+                        <p x-show="historyTags.length === 0" class="text-xs text-gray-500">Nenhuma tag cadastrada.</p>
+                    </div>
+                </section>
+            </div>
+
+            <div class="pt-3 border-t border-gray-800 flex justify-end">
+                <button type="button" @click="closeModal('tags')" class="px-4 py-2 rounded-xl bg-itau-cardBg text-xs text-gray-300">Concluir</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal Registrar Log -->
     <div x-show="modals.log" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm no-print" x-transition>
         <div @click.outside="closeModal('log')" class="bg-itau-darkNavy border border-itau-navy w-full max-w-md rounded-2xl shadow-2xl p-6 space-y-4">
@@ -676,9 +943,17 @@
                     <label class="block text-xs font-medium text-gray-300 mb-1">Descrição e Impacto de Negócio</label>
                     <textarea x-model="newLog.content" rows="3" required class="w-full bg-itau-cardBg text-xs text-white px-3 py-2 rounded-xl border border-gray-800"></textarea>
                 </div>
-                <div>
-                    <label class="block text-xs font-medium text-gray-300 mb-1">Tags (separadas por vírgula)</label>
-                    <input type="text" x-model="newLog.rawTags" placeholder="aws, step-functions, glue, data-mesh" class="w-full bg-itau-cardBg text-xs text-white px-3 py-2 rounded-xl border border-gray-800">
+                <div class="space-y-2">
+                    <label class="block text-xs font-medium text-gray-300">Tags</label>
+                    <div class="flex flex-wrap gap-2">
+                        <template x-for="tag in historyTags" :key="tag">
+                            <label class="flex items-center gap-1.5 px-2 py-1 rounded-lg border border-gray-800 bg-itau-cardBg text-[11px] text-gray-300 cursor-pointer">
+                                <input type="checkbox" :value="tag" x-model="newLog.tags" class="rounded border-gray-700 bg-itau-darkNavy text-itau-orange focus:ring-itau-orange">
+                                <span x-text="tag"></span>
+                            </label>
+                        </template>
+                        <span x-show="historyTags.length === 0" class="text-[11px] text-gray-500">Cadastre tags em Configurações → Gerenciar Tags.</span>
+                    </div>
                 </div>
                 <div class="pt-3 border-t border-gray-800 flex justify-end gap-2">
                     <button type="button" @click="closeModal('log')" class="px-4 py-2 rounded-xl bg-itau-cardBg text-xs text-gray-300">Cancelar</button>
@@ -693,66 +968,138 @@
         function pdiExecutiveApp() {
             return {
                 isPresentationMode: false,
-                selectedPillar: 'all',
+                selectedTags: [],
+                selectedLogTags: [],
                 selectedStatus: 'all',
+                selectedPeriod: 'all',
                 searchQuery: '',
 
-                modals: { goal: false, editProfile: false, log: false },
+                modals: { goal: false, certification: false, editProfile: false, log: false, tags: false },
                 toasts: [],
+                editingGoalId: null,
+                newTagInputs: { goals: '', history: '' },
+                tagManagement: { scope: null, original: '', renamed: '' },
+                editingCertificationId: null,
+                newCertification: { name: '', startDate: '', endDate: '', renewable: false, renewals: [] },
 
                 profile: {
                     name: 'Nicolas Gomes',
-                    role: 'Data Engineer Senior / Especialista em Dados',
+                    role: 'Engenheiro de Dados Júnior',
                     track: 'Trilha Técnica (IC - Individual Contributor)',
                     area: 'Engenharia de Dados • Itaú Unibanco',
-                    longTermVision: 'Evoluir continuamente como Especialista/IC na Trilha Técnica de Engenharia e Arquitetura de Dados no Itaú Unibanco. Foco absoluto no ecossistema Data Mesh, descentralização de Data Products com alta governança, arquitetura Serverless em nuvem AWS e máxima eficiência computacional.',
+                    longTermVision: 'Evoluir de Engenheiro de Dados Júnior para Pleno, desenvolvendo autonomia para conduzir soluções de dados de ponta a ponta e entregando resultados consistentes para o negócio. Quero fortalecer minha atuação em AWS, qualidade e governança de dados, observabilidade e eficiência, demonstrando essa evolução por meio de entregas de impacto, resolução de problemas com menor dependência e feedbacks alinhados aos critérios de progressão da empresa.',
                     strategicPillars: [
                         { title: 'Arquitetura Data Mesh', description: 'Descentralização de pipelines, autonomia de domínios e criação de Data Products altamente governados.' },
-                        { title: 'Engenharia AWS Serverless', description: 'Uso avançado de AWS EventBridge, Step Functions, Glue Jobs e automação sem servidor.' },
+                        { title: 'Engenharia de Dados em AWS', description: 'Desenvolver e evoluir soluções de dados utilizando serviços AWS e PySpark, aplicando boas práticas de qualidade, observabilidade, segurança e eficiência de custos.' },
                         { title: 'Democratização & Governança', description: 'Eliminação de processos manuais e garantia de linhagem e histórico auditável de dados.' },
                         { title: 'Performance & Otimização', description: 'Redução drástica do tempo de processamento e otimização de consumo de recursos AWS.' }
                     ]
                 },
 
-                pillars: [
-                    { id: 'all', name: 'Todos os Pilares', icon: 'grid' },
-                    { id: 'Arquitetura AWS Serverless', name: 'AWS Serverless', icon: 'cloud' },
-                    { id: 'Data Mesh & Governança', name: 'Data Mesh', icon: 'network' },
-                    { id: 'Certificações AWS', name: 'Certificações AWS', icon: 'award' },
-                    { id: 'Performance & FinOps', name: 'Performance & Eficiência', icon: 'zap' }
-                ],
+                goalTags: [],
 
                 newGoal: {
                     title: '',
-                    pillar: 'Arquitetura AWS Serverless',
-                    quarter: 'Q4 2026',
+                    tags: [],
+                    period: '',
                     kpi: '',
                     description: '',
                     tasks: [{ text: '', done: false }]
                 },
 
-                newLog: { title: '', content: '', rawTags: '' },
+                newLog: { title: '', content: '', tags: [] },
 
                 goals: [],
                 logs: [],
+                certifications: [],
+                historyTags: [],
 
                 initApp() {
                     const savedProfile = localStorage.getItem('nicolas_pdi_profile');
                     const savedGoals = localStorage.getItem('nicolas_pdi_goals');
+                    const savedGoalTags = localStorage.getItem('nicolas_pdi_goal_tags');
                     const savedLogs = localStorage.getItem('nicolas_pdi_logs');
+                    const savedHistoryTags = localStorage.getItem('nicolas_pdi_history_tags');
+                    const savedCertifications = localStorage.getItem('nicolas_pdi_certifications');
 
-                    if (savedProfile) this.profile = JSON.parse(savedProfile);
+                    this.newGoal.period = this.getCurrentPeriod();
+                    this.goalTags = savedGoalTags
+                        ? JSON.parse(savedGoalTags).filter(tag => typeof tag === 'string' && tag.trim())
+                        : [];
+                    this.historyTags = savedHistoryTags
+                        ? JSON.parse(savedHistoryTags).filter(tag => typeof tag === 'string' && tag.trim())
+                        : [];
+                    if (savedProfile) {
+                        this.profile = JSON.parse(savedProfile);
+                        let profileMigrated = false;
+                        if (this.profile.role === 'Data Engineer Senior / Especialista em Dados') {
+                            this.profile.role = 'Engenheiro de Dados Júnior';
+                            profileMigrated = true;
+                        }
+                        if (this.profile.longTermVision === 'Evoluir continuamente como Especialista/IC na Trilha Técnica de Engenharia e Arquitetura de Dados no Itaú Unibanco. Foco absoluto no ecossistema Data Mesh, descentralização de Data Products com alta governança, arquitetura Serverless em nuvem AWS e máxima eficiência computacional.') {
+                            this.profile.longTermVision = 'Evoluir de Engenheiro de Dados Júnior para Pleno, desenvolvendo autonomia para conduzir soluções de dados de ponta a ponta e entregando resultados consistentes para o negócio. Quero fortalecer minha atuação em AWS, qualidade e governança de dados, observabilidade e eficiência, demonstrando essa evolução por meio de entregas de impacto, resolução de problemas com menor dependência e feedbacks alinhados aos critérios de progressão da empresa.';
+                            profileMigrated = true;
+                        }
+                        const awsDataEngineeringPillar = (this.profile.strategicPillars || []).find(pillar => pillar.title === 'Engenharia de Dados em AWS');
+                        if (awsDataEngineeringPillar && awsDataEngineeringPillar.description === 'Desenvolver e evoluir soluções de dados utilizando serviços AWS, como Glue, Step Functions e EventBridge, aplicando boas práticas de qualidade, observabilidade, segurança e eficiência de custos.') {
+                            awsDataEngineeringPillar.description = 'Desenvolver e evoluir soluções de dados utilizando serviços AWS e PySpark, aplicando boas práticas de qualidade, observabilidade, segurança e eficiência de custos.';
+                            profileMigrated = true;
+                        }
+                        if (profileMigrated) localStorage.setItem('nicolas_pdi_profile', JSON.stringify(this.profile));
+                    }
+                    if (savedCertifications) {
+                        this.certifications = JSON.parse(savedCertifications);
+                    } else {
+                        this.certifications = [{
+                            id: 'cloud-practitioner-existing',
+                            name: 'AWS Cloud Practitioner',
+                            startDate: '',
+                            endDate: '',
+                            renewable: true,
+                            renewals: []
+                        }];
+                        localStorage.setItem('nicolas_pdi_certifications', JSON.stringify(this.certifications));
+                    }
 
                     if (savedGoals) {
                         this.goals = JSON.parse(savedGoals);
+                        let goalsMigrated = false;
+                        this.goals.forEach(goal => {
+                            if (!goal.period) {
+                                goal.period = this.periodFromLegacyQuarter(goal.quarter);
+                                goalsMigrated = true;
+                            }
+                            if (goal.quarter !== undefined) {
+                                delete goal.quarter;
+                                goalsMigrated = true;
+                            }
+                            const normalizedTags = [...new Set(
+                                (Array.isArray(goal.tags) ? goal.tags : goal.pillar ? [goal.pillar] : [])
+                                    .filter(tag => typeof tag === 'string')
+                                    .map(tag => tag.trim())
+                                    .filter(Boolean)
+                            )];
+                            if (JSON.stringify(goal.tags) !== JSON.stringify(normalizedTags)) {
+                                goal.tags = normalizedTags;
+                                goalsMigrated = true;
+                            }
+                            if (goal.pillar !== undefined) {
+                                delete goal.pillar;
+                                goalsMigrated = true;
+                            }
+                            goal.tags.forEach(tag => {
+                                if (this.registerGoalTag(tag)) goalsMigrated = true;
+                            });
+                        });
+                        if (goalsMigrated) this.saveToStorage();
                     } else {
                         this.goals = [
                             {
                                 id: 1,
                                 title: 'Certificação AWS Solutions Architect - Associate (SAA-C03)',
-                                pillar: 'Certificações AWS',
+                                tags: ['Certificações AWS'],
                                 status: 'Em Andamento',
-                                quarter: 'Próximo Mês',
+                                period: '2026-S2',
                                 kpi: 'Aprovação no exame oficial elevando a senioridade em arquitetura cloud',
                                 description: 'Reta final de preparação focada em padrões de resiliência, alta disponibilidade, custos e segurança na AWS.',
                                 tasks: [
@@ -764,9 +1111,9 @@
                             {
                                 id: 2,
                                 title: 'Evolução e Expansão da Plataforma Planejado x Realizado na AWS',
-                                pillar: 'Arquitetura AWS Serverless',
+                                tags: ['Arquitetura AWS Serverless'],
                                 status: 'Em Andamento',
-                                quarter: 'Q4 2026',
+                                period: '2026-S2',
                                 kpi: 'Suporte a novas fontes de dados de terceiros e otimização adicional do Glue Job',
                                 description: 'Manter a sustentabilidade da arquitetura moderna que reduziu o tempo de execução de 6h para 30min no AWS Step Functions.',
                                 tasks: [
@@ -777,9 +1124,9 @@
                             {
                                 id: 3,
                                 title: 'Padronização de Data Products no Modelo Data Mesh',
-                                pillar: 'Data Mesh & Governança',
+                                tags: ['Data Mesh & Governança'],
                                 status: 'Planejado',
-                                quarter: 'Q1 2027',
+                                period: '2027-S1',
                                 kpi: 'Contratos de dados definidos e publicação de metadados no catálogo corporativo',
                                 description: 'Garantir que todas as bases alimentadas pelo domínio tenham contratos de dados claros e reutilizáveis por outras áreas do banco.',
                                 tasks: [
@@ -788,11 +1135,29 @@
                                 ]
                             }
                         ];
+                        this.goals.forEach(goal => goal.tags.forEach(tag => this.registerGoalTag(tag)));
                         this.saveToStorage();
                     }
 
                     if (savedLogs) {
                         this.logs = JSON.parse(savedLogs);
+                        let logsMigrated = false;
+                        this.logs.forEach(log => {
+                            const normalizedTags = [...new Set(
+                                (Array.isArray(log.tags) ? log.tags : [])
+                                    .filter(tag => typeof tag === 'string')
+                                    .map(tag => tag.trim())
+                                    .filter(Boolean)
+                            )];
+                            if (JSON.stringify(log.tags) !== JSON.stringify(normalizedTags)) {
+                                log.tags = normalizedTags;
+                                logsMigrated = true;
+                            }
+                            log.tags.forEach(tag => {
+                                if (this.registerHistoryTag(tag)) logsMigrated = true;
+                            });
+                        });
+                        if (logsMigrated) this.saveToStorage();
                     } else {
                         this.logs = [
                             {
@@ -810,6 +1175,7 @@
                                 tags: ['aws', 'certificacao', 'cloud-practitioner']
                             }
                         ];
+                        this.logs.forEach(log => log.tags.forEach(tag => this.registerHistoryTag(tag)));
                         this.saveToStorage();
                     }
 
@@ -832,13 +1198,188 @@
 
                 get filteredGoals() {
                     return this.goals.filter(goal => {
-                        const matchPillar = this.selectedPillar === 'all' || goal.pillar === this.selectedPillar;
+                        const goalTags = Array.isArray(goal.tags) ? goal.tags : [];
+                        const matchTags = this.selectedTags.length === 0 || this.selectedTags.some(tag => goalTags.includes(tag));
                         const matchStatus = this.selectedStatus === 'all' || goal.status === this.selectedStatus;
+                        const matchPeriod = this.selectedPeriod === 'all' || goal.period === this.selectedPeriod;
                         const matchQuery = this.searchQuery === '' || 
                                            goal.title.toLowerCase().includes(this.searchQuery.toLowerCase()) || 
                                            goal.description.toLowerCase().includes(this.searchQuery.toLowerCase());
-                        return matchPillar && matchStatus && matchQuery;
+                        return matchTags && matchStatus && matchPeriod && matchQuery;
                     });
+                },
+
+                toggleSelectedTag(tag) {
+                    this.selectedTags = this.selectedTags.includes(tag)
+                        ? this.selectedTags.filter(selectedTag => selectedTag !== tag)
+                        : [...this.selectedTags, tag];
+                },
+
+                toggleSelectedLogTag(tag) {
+                    this.selectedLogTags = this.selectedLogTags.includes(tag)
+                        ? this.selectedLogTags.filter(selectedTag => selectedTag !== tag)
+                        : [...this.selectedLogTags, tag];
+                },
+
+                registerGoalTag(tag) {
+                    if (typeof tag !== 'string') return false;
+                    const normalizedTag = tag.trim();
+                    if (!normalizedTag || this.goalTags.some(existingTag => existingTag.toLowerCase() === normalizedTag.toLowerCase())) return false;
+                    this.goalTags.push(normalizedTag);
+                    return true;
+                },
+
+                registerHistoryTag(tag) {
+                    if (typeof tag !== 'string') return false;
+                    const normalizedTag = tag.trim();
+                    if (!normalizedTag || this.historyTags.some(existingTag => existingTag.toLowerCase() === normalizedTag.toLowerCase())) return false;
+                    this.historyTags.push(normalizedTag);
+                    return true;
+                },
+
+                openTagSettings() {
+                    this.cancelTagRename();
+                    this.newTagInputs = { goals: '', history: '' };
+                    this.openModal('tags');
+                },
+
+                addManagedTag(scope) {
+                    const tag = this.newTagInputs[scope].trim();
+                    if (!tag) return;
+                    const added = scope === 'goals' ? this.registerGoalTag(tag) : this.registerHistoryTag(tag);
+                    if (!added) {
+                        this.showToast('Já existe uma tag com esse nome.', 'warning');
+                        return;
+                    }
+                    this.newTagInputs[scope] = '';
+                    this.saveToStorage();
+                    this.showToast('Tag cadastrada.', 'success');
+                },
+
+                startTagRename(scope, tag) {
+                    this.tagManagement = { scope, original: tag, renamed: tag };
+                    this.refreshIcons();
+                },
+
+                cancelTagRename() {
+                    this.tagManagement = { scope: null, original: '', renamed: '' };
+                },
+
+                updateTagReferences(scope, oldTag, newTag) {
+                    const records = scope === 'goals' ? this.goals : this.logs;
+                    records.forEach(record => {
+                        const tags = Array.isArray(record.tags) ? record.tags : [];
+                        if (!tags.includes(oldTag)) return;
+                        record.tags = [...new Set(tags.map(tag => tag === oldTag ? newTag : tag))];
+                    });
+
+                    if (scope === 'goals') {
+                        this.newGoal.tags = [...new Set(this.newGoal.tags.map(tag => tag === oldTag ? newTag : tag))];
+                        this.selectedTags = [...new Set(this.selectedTags.map(tag => tag === oldTag ? newTag : tag))];
+                    } else {
+                        this.newLog.tags = [...new Set(this.newLog.tags.map(tag => tag === oldTag ? newTag : tag))];
+                        this.selectedLogTags = [...new Set(this.selectedLogTags.map(tag => tag === oldTag ? newTag : tag))];
+                    }
+                },
+
+                saveTagRename(scope) {
+                    if (this.tagManagement.scope !== scope) return;
+                    const oldTag = this.tagManagement.original;
+                    const renamed = this.tagManagement.renamed.trim();
+                    if (!renamed) {
+                        this.showToast('O nome da tag não pode ficar vazio.', 'warning');
+                        return;
+                    }
+                    const tagList = scope === 'goals' ? this.goalTags : this.historyTags;
+                    const existingTag = tagList.find(tag => tag !== oldTag && tag.toLowerCase() === renamed.toLowerCase());
+                    const finalTag = existingTag || renamed;
+                    if (finalTag !== oldTag) {
+                        this.updateTagReferences(scope, oldTag, finalTag);
+                        const tagIndex = tagList.indexOf(oldTag);
+                        if (tagIndex >= 0) {
+                            if (existingTag) tagList.splice(tagIndex, 1);
+                            else tagList.splice(tagIndex, 1, finalTag);
+                        }
+                    }
+                    this.cancelTagRename();
+                    this.saveToStorage();
+                    this.showToast(existingTag ? 'Tags combinadas com sucesso.' : 'Tag renomeada.', 'success');
+                },
+
+                openLogModal() {
+                    this.newLog = { title: '', content: '', tags: [] };
+                    this.openModal('log');
+                },
+
+                deleteManagedTag(scope, tag) {
+                    if (!confirm(`Excluir a tag "${tag}"? Ela também será removida dos registros associados.`)) return;
+                    const tagList = scope === 'goals' ? this.goalTags : this.historyTags;
+                    const index = tagList.indexOf(tag);
+                    if (index >= 0) tagList.splice(index, 1);
+                    const records = scope === 'goals' ? this.goals : this.logs;
+                    records.forEach(record => {
+                        record.tags = (record.tags || []).filter(recordTag => recordTag !== tag);
+                    });
+                    if (scope === 'goals') {
+                        this.newGoal.tags = this.newGoal.tags.filter(selectedTag => selectedTag !== tag);
+                        this.selectedTags = this.selectedTags.filter(selectedTag => selectedTag !== tag);
+                    } else {
+                        this.newLog.tags = this.newLog.tags.filter(selectedTag => selectedTag !== tag);
+                        this.selectedLogTags = this.selectedLogTags.filter(selectedTag => selectedTag !== tag);
+                    }
+                    this.saveToStorage();
+                    this.showToast('Tag excluída.', 'warning');
+                },
+
+                getTagStyle(tag) {
+                    const styles = [
+                        'bg-blue-500/10 text-blue-400 border-blue-500/30',
+                        'bg-purple-500/10 text-purple-400 border-purple-500/30',
+                        'bg-amber-500/10 text-amber-400 border-amber-500/30',
+                        'bg-emerald-500/10 text-emerald-400 border-emerald-500/30',
+                        'bg-cyan-500/10 text-cyan-400 border-cyan-500/30',
+                        'bg-rose-500/10 text-rose-400 border-rose-500/30'
+                    ];
+                    const index = this.goalTags.indexOf(tag);
+                    return styles[(index < 0 ? 0 : index) % styles.length];
+                },
+
+                get filteredLogs() {
+                    return this.logs.filter(log =>
+                        this.selectedLogTags.length === 0 ||
+                        this.selectedLogTags.some(tag => (log.tags || []).includes(tag))
+                    );
+                },
+
+                get availableGoalPeriods() {
+                    return [...new Set(this.goals.map(goal => goal.period).filter(Boolean))].sort().reverse();
+                },
+
+                get semesterOptions() {
+                    const currentYear = new Date().getFullYear();
+                    const periods = [];
+                    for (let year = currentYear - 1; year <= currentYear + 5; year++) {
+                        periods.push(`${year}-S1`, `${year}-S2`);
+                    }
+                    return periods;
+                },
+
+                getCurrentPeriod() {
+                    const now = new Date();
+                    const semester = now.getMonth() < 6 ? 'S1' : 'S2';
+                    return `${now.getFullYear()}-${semester}`;
+                },
+
+                periodFromLegacyQuarter(quarter) {
+                    const match = typeof quarter === 'string' && quarter.match(/Q([1-4])\s*(\d{4})/i);
+                    if (match) return `${match[2]}-${Number(match[1]) <= 2 ? 'S1' : 'S2'}`;
+                    return this.getCurrentPeriod();
+                },
+
+                formatGoalPeriod(period) {
+                    const match = typeof period === 'string' && period.match(/^(\d{4})-S([12])$/);
+                    if (!match) return period || 'Semestre não definido';
+                    return `${match[2] === '1' ? '1º' : '2º'} semestre de ${match[1]}`;
                 },
 
                 calculateProgress(goal) {
@@ -849,11 +1390,12 @@
 
                 toggleTask(goalId, taskIndex) {
                     const goal = this.goals.find(g => g.id === goalId);
-                    if (goal && goal.tasks[taskIndex]) {
+                    if (goal && goal.tasks && goal.tasks[taskIndex]) {
                         goal.tasks[taskIndex].done = !goal.tasks[taskIndex].done;
-                        const prog = this.calculateProgress(goal);
-                        if (prog === 100) goal.status = 'Concluído';
-                        else if (prog > 0 && goal.status === 'Planejado') goal.status = 'Em Andamento';
+                        const completedTasks = goal.tasks.filter(task => task.done).length;
+                        if (completedTasks === 0) goal.status = 'Planejado';
+                        else if (completedTasks === goal.tasks.length) goal.status = 'Concluído';
+                        else goal.status = 'Em Andamento';
                         this.saveToStorage();
                     }
                 },
@@ -872,22 +1414,197 @@
 
                 saveGoal() {
                     if (!this.newGoal.title || !this.newGoal.kpi) return;
-                    const validTasks = this.newGoal.tasks.filter(t => t.text.trim() !== '');
-                    const created = {
-                        id: Date.now(),
+                    const validTasks = this.newGoal.tasks
+                        .filter(task => task.text.trim() !== '')
+                        .map(task => ({ text: task.text.trim(), done: Boolean(task.done) }));
+                    const tasks = validTasks.length > 0 ? validTasks : [{ text: 'Finalizar desenvolvimento da meta', done: false }];
+                    const completedTasks = tasks.filter(task => task.done).length;
+                    const status = completedTasks === 0
+                        ? 'Planejado'
+                        : completedTasks === tasks.length
+                            ? 'Concluído'
+                            : 'Em Andamento';
+                    const goalData = {
                         title: this.newGoal.title,
-                        pillar: this.newGoal.pillar,
-                        status: 'Em Andamento',
-                        quarter: this.newGoal.quarter,
+                        tags: [...new Set(this.newGoal.tags)],
+                        status,
+                        period: this.newGoal.period,
                         kpi: this.newGoal.kpi,
                         description: this.newGoal.description,
-                        tasks: validTasks.length > 0 ? validTasks : [{ text: 'Finalizar desenvolvimento da meta', done: false }]
+                        tasks
                     };
-                    this.goals.unshift(created);
+                    if (this.editingGoalId !== null) {
+                        const goal = this.goals.find(item => item.id === this.editingGoalId);
+                        if (!goal) {
+                            this.showToast('Não foi possível localizar a meta para edição.', 'warning');
+                            return;
+                        }
+                        Object.assign(goal, goalData);
+                    } else {
+                        this.goals.unshift({ id: Date.now(), ...goalData });
+                    }
                     this.saveToStorage();
                     this.closeModal('goal');
-                    this.showToast('Nova meta cadastrada!', 'success');
-                    this.newGoal = { title: '', pillar: 'Arquitetura AWS Serverless', quarter: 'Q4 2026', kpi: '', description: '', tasks: [{ text: '', done: false }] };
+                    this.showToast(this.editingGoalId === null ? 'Nova meta cadastrada!' : 'Meta atualizada!', 'success');
+                    this.resetGoalForm();
+                },
+
+                resetGoalForm() {
+                    this.editingGoalId = null;
+                    this.newGoal = { title: '', tags: [], period: this.getCurrentPeriod(), kpi: '', description: '', tasks: [{ text: '', done: false }] };
+                },
+
+                openGoalModal() {
+                    this.resetGoalForm();
+                    this.openModal('goal');
+                },
+
+                editGoal(goal) {
+                    this.editingGoalId = goal.id;
+                    this.newGoal = {
+                        title: goal.title,
+                        tags: Array.isArray(goal.tags) ? [...goal.tags] : goal.pillar ? [goal.pillar] : [],
+                        period: goal.period || this.getCurrentPeriod(),
+                        kpi: goal.kpi,
+                        description: goal.description || '',
+                        tasks: (goal.tasks || []).map(task => ({ text: task.text, done: Boolean(task.done) }))
+                    };
+                    if (this.newGoal.tasks.length === 0) this.newGoal.tasks.push({ text: '', done: false });
+                    this.openModal('goal');
+                },
+
+                addGoalTask() {
+                    this.newGoal.tasks.push({ text: '', done: false });
+                },
+
+                removeGoalTask(taskIndex) {
+                    this.newGoal.tasks.splice(taskIndex, 1);
+                    if (this.newGoal.tasks.length === 0) this.addGoalTask();
+                },
+
+                openCertificationModal() {
+                    this.editingCertificationId = null;
+                    this.newCertification = { name: '', startDate: '', endDate: '', renewable: false, renewals: [] };
+                    this.openModal('certification');
+                },
+
+                editCertification(certification) {
+                    this.editingCertificationId = certification.id;
+                    this.newCertification = {
+                        name: certification.name,
+                        startDate: certification.startDate || '',
+                        endDate: certification.endDate || '',
+                        renewable: Boolean(certification.renewable),
+                        renewals: (certification.renewals || []).map(renewal => ({
+                            startDate: renewal.startDate || '',
+                            endDate: renewal.endDate || ''
+                        }))
+                    };
+                    this.openModal('certification');
+                },
+
+                addCertificationRenewal() {
+                    this.newCertification.renewals.push({ startDate: '', endDate: '' });
+                },
+
+                removeCertificationRenewal(index) {
+                    this.newCertification.renewals.splice(index, 1);
+                },
+
+                saveCertification() {
+                    const certification = this.newCertification;
+                    if (!certification.name.trim() || !certification.startDate || !certification.endDate) {
+                        this.showToast('Preencha o nome e o período inicial da certificação.', 'warning');
+                        return;
+                    }
+                    if (certification.startDate > certification.endDate) {
+                        this.showToast('A data de início deve ser anterior à data de término.', 'warning');
+                        return;
+                    }
+
+                    const renewals = certification.renewable ? certification.renewals : [];
+                    for (const renewal of renewals) {
+                        if (!renewal.startDate || !renewal.endDate || renewal.startDate > renewal.endDate) {
+                            this.showToast('Informe datas válidas de início e término para cada renovação.', 'warning');
+                            return;
+                        }
+                    }
+
+                    const savedCertification = {
+                        id: this.editingCertificationId || Date.now(),
+                        name: certification.name.trim(),
+                        startDate: certification.startDate,
+                        endDate: certification.endDate,
+                        renewable: certification.renewable,
+                        renewals: renewals.map(renewal => ({
+                            startDate: renewal.startDate,
+                            endDate: renewal.endDate
+                        }))
+                    };
+                    const existingIndex = this.certifications.findIndex(item => item.id === this.editingCertificationId);
+                    if (existingIndex >= 0) this.certifications.splice(existingIndex, 1, savedCertification);
+                    else this.certifications.unshift(savedCertification);
+
+                    this.saveToStorage();
+                    this.closeModal('certification');
+                    this.showToast(this.editingCertificationId ? 'Certificação atualizada!' : 'Certificação cadastrada!', 'success');
+                    this.editingCertificationId = null;
+                    this.newCertification = { name: '', startDate: '', endDate: '', renewable: false, renewals: [] };
+                },
+
+                deleteCertification(id) {
+                    if (confirm('Deseja excluir esta certificação e seu histórico de renovações?')) {
+                        this.certifications = this.certifications.filter(certification => certification.id !== id);
+                        this.saveToStorage();
+                        this.showToast('Certificação removida.', 'warning');
+                    }
+                },
+
+                getCurrentCertificationPeriod(certification) {
+                    const periods = [
+                        { startDate: certification.startDate || '', endDate: certification.endDate || '', isRenewal: false },
+                        ...(certification.renewals || []).map(renewal => ({
+                            startDate: renewal.startDate || '',
+                            endDate: renewal.endDate || '',
+                            isRenewal: true
+                        }))
+                    ];
+                    const datedPeriods = periods.filter(period => period.startDate && period.endDate);
+                    if (datedPeriods.length === 0) return periods[0];
+
+                    const today = this.getTodayDate();
+                    const activePeriods = datedPeriods
+                        .filter(period => period.startDate <= today && period.endDate >= today)
+                        .sort((a, b) => b.startDate.localeCompare(a.startDate));
+                    if (activePeriods.length > 0) return activePeriods[0];
+
+                    const futurePeriods = datedPeriods
+                        .filter(period => period.startDate > today)
+                        .sort((a, b) => a.startDate.localeCompare(b.startDate));
+                    if (futurePeriods.length > 0) return futurePeriods[0];
+
+                    return datedPeriods.sort((a, b) => b.startDate.localeCompare(a.startDate))[0];
+                },
+
+                getCertificationStatus(period) {
+                    if (!period.startDate || !period.endDate) return 'Vigência não informada';
+                    const today = this.getTodayDate();
+                    if (today < period.startDate) return 'Vigente a partir de';
+                    if (today > period.endDate) return 'Expirada';
+                    return 'Vigente';
+                },
+
+                getCertificationStatusStyle(period) {
+                    const status = this.getCertificationStatus(period);
+                    if (status === 'Vigente') return 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30';
+                    if (status === 'Expirada') return 'bg-rose-500/10 text-rose-300 border-rose-500/30';
+                    if (status === 'Vigente a partir de') return 'bg-amber-500/10 text-amber-300 border-amber-500/30';
+                    return 'bg-gray-700/50 text-gray-300 border-gray-600';
+                },
+
+                getTodayDate() {
+                    const now = new Date();
+                    return new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
                 },
 
                 saveProfile() {
@@ -898,19 +1615,19 @@
 
                 saveLog() {
                     if (!this.newLog.title || !this.newLog.content) return;
-                    const tagsArray = this.newLog.rawTags.split(',').map(t => t.trim().toLowerCase()).filter(t => t.length > 0);
+                    const tagsArray = [...new Set(this.newLog.tags)];
                     const log = {
                         id: Date.now(),
                         title: this.newLog.title,
                         content: this.newLog.content,
                         date: new Date().toISOString().split('T')[0],
-                        tags: tagsArray.length > 0 ? tagsArray : ['itau', 'aws']
+                        tags: tagsArray
                     };
                     this.logs.unshift(log);
                     this.saveToStorage();
                     this.closeModal('log');
                     this.showToast('Conquista registrada com sucesso!', 'success');
-                    this.newLog = { title: '', content: '', rawTags: '' };
+                    this.newLog = { title: '', content: '', tags: [] };
                 },
 
                 deleteGoal(id) {
@@ -929,8 +1646,11 @@
 
                 saveToStorage() {
                     localStorage.setItem('nicolas_pdi_goals', JSON.stringify(this.goals));
+                    localStorage.setItem('nicolas_pdi_goal_tags', JSON.stringify(this.goalTags));
                     localStorage.setItem('nicolas_pdi_logs', JSON.stringify(this.logs));
+                    localStorage.setItem('nicolas_pdi_history_tags', JSON.stringify(this.historyTags));
                     localStorage.setItem('nicolas_pdi_profile', JSON.stringify(this.profile));
+                    localStorage.setItem('nicolas_pdi_certifications', JSON.stringify(this.certifications));
                     this.refreshIcons();
                 },
 
@@ -944,7 +1664,7 @@
                 },
 
                 exportData() {
-                    const data = { profile: this.profile, goals: this.goals, logs: this.logs };
+                    const data = { profile: this.profile, goals: this.goals, goalTags: this.goalTags, logs: this.logs, historyTags: this.historyTags, certifications: this.certifications };
                     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
                     const url = URL.createObjectURL(blob);
                     const a = document.createElement('a');
@@ -961,9 +1681,32 @@
                         try {
                             const imported = JSON.parse(e.target.result);
                             if (imported.goals && imported.logs) {
-                                this.goals = imported.goals;
-                                this.logs = imported.logs;
+                                this.goals = imported.goals.map(goal => {
+                                    const tags = Array.isArray(goal.tags) ? goal.tags : goal.pillar ? [goal.pillar] : [];
+                                    const migratedGoal = {
+                                        ...goal,
+                                        tags: [...new Set(tags.filter(tag => typeof tag === 'string').map(tag => tag.trim()).filter(Boolean))]
+                                    };
+                                    delete migratedGoal.pillar;
+                                    return migratedGoal;
+                                });
+                                this.goalTags = Array.isArray(imported.goalTags)
+                                    ? imported.goalTags.filter(tag => typeof tag === 'string' && tag.trim())
+                                    : [];
+                                this.goals.forEach(goal => goal.tags.forEach(tag => this.registerGoalTag(tag)));
+                                this.logs = imported.logs.map(log => ({
+                                    ...log,
+                                    tags: [...new Set((Array.isArray(log.tags) ? log.tags : [])
+                                        .filter(tag => typeof tag === 'string')
+                                        .map(tag => tag.trim())
+                                        .filter(Boolean))]
+                                }));
+                                this.historyTags = Array.isArray(imported.historyTags)
+                                    ? imported.historyTags.filter(tag => typeof tag === 'string' && tag.trim())
+                                    : [];
+                                this.logs.forEach(log => log.tags.forEach(tag => this.registerHistoryTag(tag)));
                                 if (imported.profile) this.profile = imported.profile;
+                                if (Array.isArray(imported.certifications)) this.certifications = imported.certifications;
                                 this.saveToStorage();
                                 this.showToast('PDI de Nicolas importado com sucesso!', 'success');
                             }
@@ -977,8 +1720,11 @@
                 resetData() {
                     if (confirm('Deseja restaurar as configurações padrão com o case do Nicolas Gomes?')) {
                         localStorage.removeItem('nicolas_pdi_goals');
+                        localStorage.removeItem('nicolas_pdi_goal_tags');
                         localStorage.removeItem('nicolas_pdi_logs');
+                        localStorage.removeItem('nicolas_pdi_history_tags');
                         localStorage.removeItem('nicolas_pdi_profile');
+                        localStorage.removeItem('nicolas_pdi_certifications');
                         location.reload();
                     }
                 },
@@ -987,7 +1733,8 @@
                 closeModal(type) { this.modals[type] = false; },
 
                 showToast(message, type = 'info') {
-                    const toast = { id: Date.now(), message, type, show: true };
+                    const icons = { success: 'check-circle-2', warning: 'alert-triangle', info: 'info' };
+                    const toast = { id: Date.now(), message, type, icon: icons[type] || icons.info, show: true };
                     this.toasts.push(toast);
                     setTimeout(() => { toast.show = false; }, 3000);
                 },
@@ -996,26 +1743,6 @@
                     if (!dateStr) return '';
                     const parts = dateStr.split('-');
                     return parts.length === 3 ? `${parts[2]}/${parts[1]}/${parts[0]}` : dateStr;
-                },
-
-                getPilarStyle(pillar) {
-                    switch (pillar) {
-                        case 'Arquitetura AWS Serverless': return 'bg-blue-500/10 text-blue-400 border-blue-500/30';
-                        case 'Data Mesh & Governança': return 'bg-purple-500/10 text-purple-400 border-purple-500/30';
-                        case 'Certificações AWS': return 'bg-amber-500/10 text-amber-400 border-amber-500/30';
-                        case 'Performance & FinOps': return 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30';
-                        default: return 'bg-gray-800 text-gray-300 border-gray-700';
-                    }
-                },
-
-                getPilarIcon(pillar) {
-                    switch (pillar) {
-                        case 'Arquitetura AWS Serverless': return 'cloud';
-                        case 'Data Mesh & Governança': return 'network';
-                        case 'Certificações AWS': return 'award';
-                        case 'Performance & FinOps': return 'zap';
-                        default: return 'tag';
-                    }
                 },
 
                 getStatusStyle(status) {
