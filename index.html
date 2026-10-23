@@ -1,67 +1,1033 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PDI - Plano de Desenvolvimento Individual</title>
+    <title>PDI - Nicolas Gomes | Especialista em Engenharia de Dados Itaú</title>
+    
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-900 text-gray-100 min-h-screen font-sans">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        itau: {
+                            orange: '#EC7000',
+                            orangeHover: '#D16200',
+                            navy: '#002D62',
+                            darkNavy: '#0A1E3F',
+                            bbaDark: '#071325',
+                            cardBg: '#0F264A',
+                            gold: '#C5A059',
+                            slate: '#1E293B'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Google Fonts Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #071325;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1E293B;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #EC7000;
+        }
 
-    <!-- Header -->
-    <header class="bg-gray-800 border-b border-gray-700 py-8">
-        <div class="max-w-4xl mx-auto px-4">
-            <h1 class="text-3xl font-bold text-blue-400">Plano de Desenvolvimento Individual (PDI)</h1>
-            <p class="text-gray-400 mt-2">Acompanhamento contínuo de metas, estudos e carreira.</p>
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            body {
+                background-color: #ffffff !important;
+                color: #000000 !important;
+            }
+            .print-card {
+                border: 1px solid #cbd5e1 !important;
+                background-color: #ffffff !important;
+                color: #0f172a !important;
+                page-break-inside: avoid;
+            }
+            .print-text-dark {
+                color: #0f172a !important;
+            }
+            .print-header {
+                background-color: #002D62 !important;
+                color: #ffffff !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-itau-bbaDark text-gray-100 min-h-screen flex flex-col antialiased selection:bg-itau-orange selection:text-white"
+      x-data="pdiExecutiveApp()" 
+      x-init="initApp()"
+      :class="{ 'p-0 bg-itau-darkNavy': isPresentationMode }">
+
+    <!-- Toast System -->
+    <div class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none no-print">
+        <template x-for="toast in toasts" :key="toast.id">
+            <div x-show="toast.show" 
+                 x-transition:enter="transition ease-out duration-300 transform translate-y-2 opacity-0"
+                 x-transition:enter-start="translate-y-2 opacity-0"
+                 x-transition:enter-end="translate-y-0 opacity-100"
+                 x-transition:leave="transition ease-in duration-200 transform translate-y-2 opacity-0"
+                 class="pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-xl shadow-2xl border text-xs font-semibold"
+                 :class="{
+                     'bg-emerald-950/90 border-emerald-500/40 text-emerald-200': toast.type === 'success',
+                     'bg-itau-navy/90 border-itau-orange/40 text-white': toast.type === 'info',
+                     'bg-amber-950/90 border-amber-500/40 text-amber-200': toast.type === 'warning'
+                 }">
+                <i :data-lucide="toast.icon" class="w-4 h-4 text-itau-orange"></i>
+                <span x-text="toast.message"></span>
+            </div>
+        </template>
+    </div>
+
+    <!-- Header Itaú -->
+    <header class="bg-gradient-to-r from-itau-darkNavy via-itau-navy to-itau-darkNavy border-b border-itau-orange/30 sticky top-0 z-40 shadow-2xl print-header">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-5">
+                
+                <!-- Perfil Nicolas Gomes -->
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-itau-orange flex items-center justify-center font-black text-white text-xl shadow-lg shadow-itau-orange/30 shrink-0 border border-amber-400/30">
+                        itau
+                    </div>
+
+                    <div>
+                        <div class="flex items-center gap-2.5 flex-wrap">
+                            <h1 class="text-xl sm:text-2xl font-extrabold text-white tracking-tight" x-text="profile.name"></h1>
+                            <span class="px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider bg-itau-orange/20 text-itau-orange border border-itau-orange/40 rounded-full" x-text="profile.track"></span>
+                        </div>
+                        <p class="text-xs text-blue-200 font-medium mt-0.5" x-text="`${profile.role} • ${profile.area}`"></p>
+                    </div>
+                </div>
+
+                <!-- Ações -->
+                <div class="flex flex-wrap items-center gap-2.5 no-print">
+                    
+                    <button @click="togglePresentationMode()" 
+                            class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl font-semibold text-xs transition-all border shadow-lg"
+                            :class="isPresentationMode ? 'bg-amber-500 text-itau-bbaDark border-amber-400 font-bold' : 'bg-itau-cardBg text-blue-200 border-gray-700/80 hover:bg-itau-navy hover:text-white'">
+                        <i :data-lucide="isPresentationMode ? 'minimize-2' : 'presentation'" class="w-4 h-4 text-itau-orange"></i>
+                        <span x-text="isPresentationMode ? 'Sair da Apresentação' : 'Modo Apresentação'"></span>
+                    </button>
+
+                    <button @click="printPage()" 
+                            class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-itau-cardBg hover:bg-itau-navy text-blue-200 font-semibold text-xs border border-gray-700/80 transition-all shadow-md">
+                        <i data-lucide="printer" class="w-4 h-4 text-itau-orange"></i>
+                        <span>Gerar PDF</span>
+                    </button>
+
+                    <button @click="openModal('goal')" 
+                            class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-itau-orange hover:bg-itau-orangeHover text-white font-bold text-xs shadow-lg shadow-itau-orange/20 transition-all active:scale-95">
+                        <i data-lucide="plus" class="w-4 h-4"></i>
+                        <span>Nova Meta</span>
+                    </button>
+
+                    <div class="relative" x-data="{ open: false }">
+                        <button @click="open = !open" @click.outside="open = false" 
+                                class="p-2 rounded-xl bg-itau-cardBg hover:bg-itau-navy text-gray-300 border border-gray-700/80 transition-all">
+                            <i data-lucide="settings" class="w-4 h-4"></i>
+                        </button>
+                        <div x-show="open" x-transition class="absolute right-0 mt-2 w-48 bg-itau-darkNavy border border-gray-800 rounded-xl shadow-2xl py-1.5 z-50">
+                            <button @click="openModal('editProfile'); open = false" class="w-full text-left px-4 py-2 text-xs font-medium text-gray-200 hover:bg-itau-navy flex items-center gap-2">
+                                <i data-lucide="user-cog" class="w-4 h-4 text-itau-orange"></i> Editar Visão
+                            </button>
+                            <button @click="exportData(); open = false" class="w-full text-left px-4 py-2 text-xs font-medium text-gray-200 hover:bg-itau-navy flex items-center gap-2">
+                                <i data-lucide="download" class="w-4 h-4 text-blue-400"></i> Exportar JSON
+                            </button>
+                            <label class="w-full text-left px-4 py-2 text-xs font-medium text-gray-200 hover:bg-itau-navy flex items-center gap-2 cursor-pointer">
+                                <i data-lucide="upload" class="w-4 h-4 text-emerald-400"></i> Importar JSON
+                                <input type="file" @change="importData($event); open = false" accept=".json" class="hidden">
+                            </label>
+                            <div class="my-1 border-t border-gray-800"></div>
+                            <button @click="resetData(); open = false" class="w-full text-left px-4 py-2 text-xs font-medium text-rose-400 hover:bg-rose-500/10 flex items-center gap-2">
+                                <i data-lucide="rotate-ccw" class="w-4 h-4"></i> Restaurar Padrão
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
         </div>
     </header>
 
-    <!-- Main Content -->
-    <main class="max-w-4xl mx-auto px-4 py-8 space-y-8">
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10">
 
-        <!-- Visão Geral -->
-        <section class="bg-gray-800 p-6 rounded-lg border border-gray-700">
-            <h2 class="text-2xl font-semibold text-blue-300 mb-3">🎯 Visão & Objetivos</h2>
-            <p class="text-gray-300 leading-relaxed">
-                Descreva aqui o seu objetivo principal para os próximos 12 a 24 meses.
-            </p>
-        </section>
+        <!-- ========================================== -->
+        <!-- SEÇÃO 1: VISÃO ESTRATÉGICA E TRILHA TÉCNICA -->
+        <!-- ========================================== -->
+        <section class="space-y-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <div class="w-2.5 h-6 bg-itau-orange rounded-full"></div>
+                    <h2 class="text-xl font-extrabold text-white tracking-tight">Trilha Técnica & Visão de Carreira (IC / Especialista)</h2>
+                </div>
+            </div>
 
-        <!-- Trilhas de Aprendizado -->
-        <section class="bg-gray-800 p-6 rounded-lg border border-gray-700">
-            <h2 class="text-2xl font-semibold text-blue-300 mb-4">🚀 Metas & Roadmap</h2>
-            
-            <div class="space-y-4">
-                <!-- Meta 1 -->
-                <div class="border-l-4 border-yellow-500 pl-4 py-1">
-                    <span class="text-xs bg-yellow-500/20 text-yellow-300 px-2 py-0.5 rounded font-mono">Em Andamento</span>
-                    <h3 class="text-lg font-medium mt-1">Certificação / Meta 1</h3>
-                    <p class="text-sm text-gray-400">Foco em arquitetura, boas práticas e projetos práticos.</p>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                
+                <!-- Bloco de Visão do Nicolas -->
+                <div class="lg:col-span-2 bg-gradient-to-br from-itau-cardBg via-itau-darkNavy to-itau-bbaDark border border-itau-navy/80 rounded-2xl p-6 shadow-2xl relative overflow-hidden print-card">
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between border-b border-gray-800 pb-3">
+                            <span class="text-xs font-bold uppercase tracking-wider text-itau-orange flex items-center gap-1.5">
+                                <i data-lucide="code" class="w-4 h-4"></i>
+                                Foco: Contribuidor Individual (IC) / Especialista Técnico
+                            </span>
+                            <span class="text-[10px] bg-itau-navy text-blue-200 border border-blue-400/20 px-2 py-0.5 rounded-md font-mono">Arquitetura Data Mesh</span>
+                        </div>
+
+                        <p class="text-sm text-gray-200 leading-relaxed font-normal print-text-dark" x-text="profile.longTermVision"></p>
+
+                        <!-- Pilares Técnicos -->
+                        <div class="pt-3 border-t border-gray-800/80">
+                            <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3 flex items-center gap-1.5">
+                                <i data-lucide="network" class="w-3.5 h-3.5 text-itau-orange"></i>
+                                Domínios Técnicos & Data Mesh no Itaú
+                            </h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <template x-for="(pillar, idx) in profile.strategicPillars" :key="idx">
+                                    <div class="bg-itau-darkNavy/80 p-3 rounded-xl border border-gray-800 flex items-start gap-2.5 print-card">
+                                        <div class="w-2 h-2 rounded-full bg-itau-orange mt-1.5 shrink-0"></div>
+                                        <div>
+                                            <h5 class="text-xs font-bold text-white print-text-dark" x-text="pillar.title"></h5>
+                                            <p class="text-[11px] text-gray-400 mt-0.5 leading-snug print-text-dark" x-text="pillar.description"></p>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
 
-                <!-- Meta 2 -->
-                <div class="border-l-4 border-emerald-500 pl-4 py-1">
-                    <span class="text-xs bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded font-mono">Concluído</span>
-                    <h3 class="text-lg font-medium mt-1">Meta Concluída</h3>
-                    <p class="text-sm text-gray-400">Descrição do objetivo atingido.</p>
+                <!-- Certificações AWS & Educação -->
+                <div class="bg-itau-cardBg border border-itau-navy/80 rounded-2xl p-6 flex flex-col justify-between shadow-2xl print-card">
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between border-b border-gray-800 pb-3">
+                            <span class="text-xs font-bold uppercase tracking-wider text-itau-orange flex items-center gap-1.5">
+                                <i data-lucide="award" class="w-4 h-4"></i>
+                                Certificações AWS
+                            </span>
+                        </div>
+
+                        <div class="space-y-3">
+                            <!-- Cloud Practitioner -->
+                            <div class="bg-itau-darkNavy p-3 rounded-xl border border-emerald-500/30 print-card">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-xs font-bold text-emerald-300">AWS Cloud Practitioner</span>
+                                    <span class="text-[10px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded font-mono font-bold">Ativa</span>
+                                </div>
+                                <p class="text-[11px] text-gray-400 mt-1">Obtida há 3 anos • **Renovada recentemente (mês passado)**</p>
+                            </div>
+
+                            <!-- Solutions Architect -->
+                            <div class="bg-itau-darkNavy p-3 rounded-xl border border-amber-500/40 print-card">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-xs font-bold text-amber-300">AWS Solutions Architect - Assoc.</span>
+                                    <span class="text-[10px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded font-mono font-bold">Mês Que Vem</span>
+                                </div>
+                                <p class="text-[11px] text-gray-400 mt-1">Em reta final de preparação para exame oficial (SAA-C03).</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 pt-4 border-t border-gray-800 text-center">
+                        <span class="text-[11px] text-gray-400 italic block">"Aprofundando arquitetura AWS e governança descentralizada em Data Mesh."</span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- SEÇÃO 2: CASE DE SUCESSO DE EM DESTAQUE -->
+        <!-- ========================================== -->
+        <section class="space-y-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <div class="w-2.5 h-6 bg-emerald-500 rounded-full"></div>
+                    <h2 class="text-xl font-extrabold text-white tracking-tight">Case em Destaque: Modernização "Planejado x Realizado"</h2>
+                </div>
+                <span class="text-xs bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-3 py-1 rounded-full font-mono font-bold">
+                    Engenharia AWS Serverless
+                </span>
+            </div>
+
+            <div class="bg-gradient-to-br from-itau-cardBg via-itau-darkNavy to-itau-bbaDark border border-emerald-500/30 rounded-2xl p-6 shadow-2xl relative print-card space-y-6">
+                
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-800 pb-4">
+                    <div>
+                        <h3 class="text-lg font-bold text-white">Plataforma de Gestão de Horas de Terceiros de Tecnologia</h3>
+                        <p class="text-xs text-gray-300 mt-1">Modernização completa de arquitetura on-premises fragilizada para ambiente AWS Serverless de alta performance e governança.</p>
+                    </div>
+                </div>
+
+                <!-- Comparativo Antes vs Depois -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    
+                    <!-- ANTES -->
+                    <div class="bg-rose-950/20 border border-rose-500/30 p-4 rounded-xl space-y-3">
+                        <div class="flex items-center justify-between border-b border-rose-500/20 pb-2">
+                            <span class="text-xs font-bold uppercase text-rose-400 flex items-center gap-1.5">
+                                <i data-lucide="alert-triangle" class="w-4 h-4"></i>
+                                Cenário Legado (On-Premises)
+                            </span>
+                            <span class="text-[10px] text-rose-300 font-mono">Jenkins / Bare-Metal</span>
+                        </div>
+                        <ul class="text-xs text-gray-300 space-y-2">
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="x-circle" class="w-4 h-4 text-rose-400 mt-0.5 shrink-0"></i>
+                                <span><strong>Infraestrutura:</strong> Máquina física dedicada vulnerável a falhas e instabilidade.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="x-circle" class="w-4 h-4 text-rose-400 mt-0.5 shrink-0"></i>
+                                <span><strong>Complexidade:</strong> 16 fluxos fragmentados orquestrados no Jenkins.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="x-circle" class="w-4 h-4 text-rose-400 mt-0.5 shrink-0"></i>
+                                <span><strong>Ingestão:</strong> Dependência de planilhas manuais e scripts de "raspa tela" instáveis.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="x-circle" class="w-4 h-4 text-rose-400 mt-0.5 shrink-0"></i>
+                                <span><strong>Tempo de Execução:</strong> entre <strong>5h30m e 6h00m</strong>.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="x-circle" class="w-4 h-4 text-rose-400 mt-0.5 shrink-0"></i>
+                                <span><strong>Gap de Negócio:</strong> Ausência total de histórico de retrofits (ajustes retroativos).</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- DEPOIS -->
+                    <div class="bg-emerald-950/20 border border-emerald-500/40 p-4 rounded-xl space-y-3">
+                        <div class="flex items-center justify-between border-b border-emerald-500/20 pb-2">
+                            <span class="text-xs font-bold uppercase text-emerald-400 flex items-center gap-1.5">
+                                <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+                                Nova Arquitetura AWS
+                            </span>
+                            <span class="text-[10px] text-emerald-300 font-mono">AWS Serverless</span>
+                        </div>
+                        <ul class="text-xs text-gray-300 space-y-2">
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0"></i>
+                                <span><strong>Stack AWS:</strong> AWS EventBridge, AWS Step Functions e AWS Glue Jobs.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0"></i>
+                                <span><strong>Simplificação:</strong> Redução de 16 para apenas <strong>7 fluxos otimizados</strong>.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0"></i>
+                                <span><strong>Governança:</strong> Eliminação de raspa-tela; utilização de bases democratizadas.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0"></i>
+                                <span><strong>Performance:</strong> Redução do tempo para <strong>máximo de 30 minutos</strong> (>90% de ganho).</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0"></i>
+                                <span><strong>Novo Recurso de Negócio:</strong> Histórico completo e auditável de <strong>retrofits</strong>.</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+
+                <!-- Métricas de Impacto -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 pt-2">
+                    <div class="bg-itau-darkNavy p-3 rounded-xl border border-gray-800 text-center">
+                        <span class="text-[10px] text-gray-400 block uppercase">Tempo de Processamento</span>
+                        <span class="text-lg font-black text-emerald-400 font-mono">~6h ➔ 30min</span>
+                    </div>
+                    <div class="bg-itau-darkNavy p-3 rounded-xl border border-gray-800 text-center">
+                        <span class="text-[10px] text-gray-400 block uppercase">Consolidação de Fluxos</span>
+                        <span class="text-lg font-black text-itau-orange font-mono">16 ➔ 7</span>
+                    </div>
+                    <div class="bg-itau-darkNavy p-3 rounded-xl border border-gray-800 text-center">
+                        <span class="text-[10px] text-gray-400 block uppercase">Fonte de Dados</span>
+                        <span class="text-lg font-black text-blue-400 font-mono">100% Governança</span>
+                    </div>
+                    <div class="bg-itau-darkNavy p-3 rounded-xl border border-gray-800 text-center">
+                        <span class="text-[10px] text-gray-400 block uppercase">Histórico Retrofits</span>
+                        <span class="text-lg font-black text-amber-400 font-mono">Disponível</span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- SEÇÃO 3: METAS E ROADMAP TÉCNICO (DATA MESH) -->
+        <!-- ========================================== -->
+        <section class="space-y-6">
+            
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div class="flex items-center gap-2">
+                    <div class="w-2.5 h-6 bg-itau-orange rounded-full"></div>
+                    <div>
+                        <h2 class="text-xl font-extrabold text-white tracking-tight">Roadmap de Desenvolvimento Técnico</h2>
+                        <p class="text-xs text-gray-400">Objetivos focados em evolução de arquitetura AWS, Data Products e Governança.</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <div class="bg-itau-cardBg px-3.5 py-2 rounded-xl border border-itau-navy text-center">
+                        <span class="text-[10px] font-medium text-gray-400 uppercase block">Progresso Geral</span>
+                        <span class="text-base font-black text-itau-orange" x-text="`${stats.overallProgress}%`"></span>
+                    </div>
+                    <div class="bg-itau-cardBg px-3.5 py-2 rounded-xl border border-itau-navy text-center">
+                        <span class="text-[10px] font-medium text-gray-400 uppercase block">Concluídas</span>
+                        <span class="text-base font-black text-emerald-400" x-text="`${stats.completed}/${stats.total}`"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filtros -->
+            <div class="bg-itau-cardBg/80 p-4 rounded-2xl border border-itau-navy/80 space-y-3 no-print">
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                    
+                    <div class="flex items-center gap-1.5 overflow-x-auto pb-2 lg:pb-0 scrollbar-none">
+                        <template x-for="pilar in pillars" :key="pilar.id">
+                            <button @click="selectedPillar = pilar.id" 
+                                    class="px-3 py-1.5 rounded-xl text-xs font-semibold transition-all whitespace-nowrap flex items-center gap-1.5 border"
+                                    :class="selectedPillar === pilar.id 
+                                        ? 'bg-itau-orange text-white border-amber-400 shadow-md shadow-itau-orange/20' 
+                                        : 'bg-itau-darkNavy text-gray-400 border-gray-800 hover:bg-itau-navy hover:text-white'">
+                                <i :data-lucide="pilar.icon" class="w-3.5 h-3.5"></i>
+                                <span x-text="pilar.name"></span>
+                            </button>
+                        </template>
+                    </div>
+
+                    <div class="flex flex-wrap items-center gap-2.5">
+                        <div class="relative flex-1 sm:w-44">
+                            <i data-lucide="search" class="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"></i>
+                            <input type="text" x-model="searchQuery" placeholder="Filtrar meta..." 
+                                   class="w-full bg-itau-darkNavy text-xs text-gray-200 placeholder-gray-500 pl-8 pr-3 py-2 rounded-xl border border-gray-800 focus:outline-none focus:border-itau-orange">
+                        </div>
+
+                        <select x-model="selectedStatus" class="bg-itau-darkNavy text-xs text-gray-200 px-3 py-2 rounded-xl border border-gray-800 focus:outline-none focus:border-itau-orange cursor-pointer">
+                            <option value="all">Todos os Status</option>
+                            <option value="Em Andamento">Em Andamento</option>
+                            <option value="Planejado">Planejado</option>
+                            <option value="Concluído">Concluído</option>
+                        </select>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Grid de Metas -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                <template x-for="goal in filteredGoals" :key="goal.id">
+                    <div class="bg-itau-cardBg border border-itau-navy/90 hover:border-itau-orange/50 rounded-2xl p-5 flex flex-col justify-between transition-all duration-200 hover:shadow-2xl hover:shadow-black/60 group relative print-card">
+                        
+                        <div class="space-y-3">
+                            <div class="flex items-start justify-between gap-2">
+                                <span class="px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 border"
+                                      :class="getPilarStyle(goal.pillar)">
+                                    <i :data-lucide="getPilarIcon(goal.pillar)" class="w-3 h-3"></i>
+                                    <span x-text="goal.pillar"></span>
+                                </span>
+
+                                <span class="text-[11px] font-mono font-bold text-itau-orange bg-itau-orange/10 px-2 py-0.5 rounded border border-itau-orange/20" x-text="goal.quarter"></span>
+                            </div>
+
+                            <div>
+                                <h3 class="text-base font-bold text-white group-hover:text-itau-orange transition-colors print-text-dark" x-text="goal.title"></h3>
+                                <p class="text-xs text-gray-300 mt-1.5 leading-relaxed print-text-dark" x-text="goal.description"></p>
+                            </div>
+
+                            <div class="bg-itau-darkNavy p-2.5 rounded-xl border border-gray-800/80 print-card">
+                                <span class="text-[10px] font-bold uppercase tracking-wider text-gray-400 block print-text-dark">Entregável Esperado:</span>
+                                <span class="text-xs text-amber-300/90 font-medium mt-0.5 block print-text-dark" x-text="goal.kpi"></span>
+                            </div>
+                        </div>
+
+                        <div class="mt-5 space-y-4">
+                            <div>
+                                <div class="flex items-center justify-between text-xs mb-1">
+                                    <span class="text-gray-400 text-[11px] font-medium print-text-dark">Progresso das Entregas</span>
+                                    <span class="font-extrabold text-itau-orange font-mono" x-text="`${calculateProgress(goal)}%`"></span>
+                                </div>
+                                <div class="w-full bg-itau-darkNavy rounded-full h-2 overflow-hidden p-0.5 border border-gray-800">
+                                    <div class="h-full rounded-full transition-all duration-500" 
+                                         :class="calculateProgress(goal) === 100 ? 'bg-emerald-500' : 'bg-itau-orange'" 
+                                         :style="`width: ${calculateProgress(goal)}%`"></div>
+                                </div>
+                            </div>
+
+                            <div class="bg-itau-darkNavy/80 p-3 rounded-xl border border-gray-800/80 space-y-2 max-h-36 overflow-y-auto print-card">
+                                <template x-for="(task, idx) in goal.tasks" :key="idx">
+                                    <label class="flex items-start gap-2 cursor-pointer text-xs select-none">
+                                        <input type="checkbox" 
+                                               :checked="task.done" 
+                                               @change="toggleTask(goal.id, idx)"
+                                               class="mt-0.5 rounded border-gray-700 bg-itau-cardBg text-itau-orange focus:ring-itau-orange no-print">
+                                        <span class="text-gray-300 print-text-dark" :class="{ 'line-through text-gray-500': task.done }" x-text="task.text"></span>
+                                    </label>
+                                </template>
+                            </div>
+
+                            <div class="flex items-center justify-between pt-2 border-t border-gray-800 text-xs">
+                                <div class="relative no-print" x-data="{ statusOpen: false }">
+                                    <button @click="statusOpen = !statusOpen" @click.outside="statusOpen = false"
+                                            class="px-2.5 py-1 rounded-md text-[11px] font-bold flex items-center gap-1 border"
+                                            :class="getStatusStyle(goal.status)">
+                                        <span x-text="goal.status"></span>
+                                        <i data-lucide="chevron-down" class="w-3 h-3"></i>
+                                    </button>
+                                    <div x-show="statusOpen" x-transition class="absolute bottom-full mb-1 left-0 w-36 bg-itau-darkNavy border border-gray-800 rounded-xl shadow-2xl py-1 z-30">
+                                        <button @click="updateGoalStatus(goal.id, 'Planejado'); statusOpen = false" class="w-full text-left px-3 py-1.5 text-xs text-slate-300 hover:bg-itau-navy">Planejado</button>
+                                        <button @click="updateGoalStatus(goal.id, 'Em Andamento'); statusOpen = false" class="w-full text-left px-3 py-1.5 text-xs text-amber-300 hover:bg-itau-navy">Em Andamento</button>
+                                        <button @click="updateGoalStatus(goal.id, 'Concluído'); statusOpen = false" class="w-full text-left px-3 py-1.5 text-xs text-emerald-300 hover:bg-itau-navy">Concluído</button>
+                                    </div>
+                                </div>
+
+                                <button @click="deleteGoal(goal.id)" class="no-print text-gray-500 hover:text-rose-400 p-1" title="Excluir Meta">
+                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </template>
+            </div>
+
+        </section>
+
+        <!-- ========================================== -->
+        <!-- SEÇÃO 4: HISTÓRICO DE ENTREGAS & TIMELINE -->
+        <!-- ========================================== -->
+        <section class="space-y-4 pt-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <div class="w-2.5 h-6 bg-emerald-500 rounded-full"></div>
+                    <h2 class="text-xl font-extrabold text-white tracking-tight">Histórico de Conquistas & Projetos</h2>
+                </div>
+                <button @click="openModal('log')" class="no-print text-xs text-emerald-400 hover:underline font-semibold flex items-center gap-1">
+                    <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i> Nova Conquista
+                </button>
+            </div>
+
+            <div class="bg-itau-cardBg border border-itau-navy rounded-2xl p-6 relative print-card">
+                <div class="relative border-l-2 border-itau-navy ml-3 space-y-6">
+                    <template x-for="log in logs" :key="log.id">
+                        <div class="relative pl-6 group">
+                            <div class="absolute -left-[9px] top-1.5 w-4 h-4 rounded-full bg-itau-darkNavy border-2 border-itau-orange"></div>
+                            
+                            <div class="bg-itau-darkNavy p-4 rounded-xl border border-gray-800 space-y-2 print-card">
+                                <div class="flex items-center justify-between gap-2 flex-wrap">
+                                    <h4 class="text-sm font-bold text-white print-text-dark" x-text="log.title"></h4>
+                                    <span class="text-[11px] font-mono text-itau-orange bg-itau-orange/10 px-2 py-0.5 rounded border border-itau-orange/20" x-text="formatDate(log.date)"></span>
+                                </div>
+                                <p class="text-xs text-gray-300 leading-relaxed print-text-dark" x-text="log.content"></p>
+                                
+                                <div class="flex items-center justify-between pt-1">
+                                    <div class="flex flex-wrap gap-1.5">
+                                        <template x-for="tag in log.tags" :key="tag">
+                                            <span class="text-[10px] bg-blue-900/40 text-blue-300 px-2 py-0.5 rounded border border-blue-500/20" x-text="`#${tag}`"></span>
+                                        </template>
+                                    </div>
+                                    <button @click="deleteLog(log.id)" class="no-print text-gray-600 hover:text-rose-400 text-xs">
+                                        <i data-lucide="x" class="w-3.5 h-3.5"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
                 </div>
             </div>
         </section>
 
-        <!-- Log de Progresso -->
-        <section class="bg-gray-800 p-6 rounded-lg border border-gray-700">
-            <h2 class="text-2xl font-semibold text-blue-300 mb-4">📈 Historico de Atualizações</h2>
-            <ul class="space-y-2 text-sm text-gray-300">
-                <li><strong class="text-gray-100">Out/2026:</strong> Inicialização do PDI no GitHub Pages.</li>
-            </ul>
-        </section>
-
     </main>
 
-    <!-- Footer -->
-    <footer class="text-center py-6 text-xs text-gray-500 border-t border-gray-800">
-        PDI Pessoal • Mantido via GitHub Pages
-    </footer>
+    <!-- Modal Nova Meta -->
+    <div x-show="modals.goal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm no-print" x-transition>
+        <div @click.outside="closeModal('goal')" class="bg-itau-darkNavy border border-itau-navy w-full max-w-lg rounded-2xl shadow-2xl p-6 space-y-4">
+            <div class="flex items-center justify-between border-b border-gray-800 pb-3">
+                <h3 class="text-base font-bold text-white flex items-center gap-2">
+                    <i data-lucide="plus-circle" class="w-5 h-5 text-itau-orange"></i> Nova Meta Técnica
+                </h3>
+                <button @click="closeModal('goal')" class="text-gray-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
 
+            <form @submit.prevent="saveGoal()" class="space-y-3">
+                <div>
+                    <label class="block text-xs font-medium text-gray-300 mb-1">Título da Meta</label>
+                    <input type="text" x-model="newGoal.title" required placeholder="Ex: Criação do Data Product de Transações" class="w-full bg-itau-cardBg text-xs text-white px-3 py-2 rounded-xl border border-gray-800 focus:outline-none focus:border-itau-orange">
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-300 mb-1">Pilar Técnico</label>
+                        <select x-model="newGoal.pillar" class="w-full bg-itau-cardBg text-xs text-white px-3 py-2 rounded-xl border border-gray-800 focus:outline-none focus:border-itau-orange">
+                            <option value="Arquitetura AWS Serverless">Arquitetura AWS Serverless</option>
+                            <option value="Data Mesh & Governança">Data Mesh & Governança</option>
+                            <option value="Certificações AWS">Certificações AWS</option>
+                            <option value="Performance & FinOps">Performance & FinOps</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-300 mb-1">Quarter / Prazo</label>
+                        <input type="text" x-model="newGoal.quarter" placeholder="Ex: Q4 2026" required class="w-full bg-itau-cardBg text-xs text-white px-3 py-2 rounded-xl border border-gray-800 focus:outline-none focus:border-itau-orange">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-gray-300 mb-1">Entregável Esperado / KPI</label>
+                    <input type="text" x-model="newGoal.kpi" placeholder="Ex: Disponibilidade de Data Product com contrato de dados em Glue" required class="w-full bg-itau-cardBg text-xs text-white px-3 py-2 rounded-xl border border-gray-800 focus:outline-none focus:border-itau-orange">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-gray-300 mb-1">Descrição Técnica</label>
+                    <textarea x-model="newGoal.description" rows="2" class="w-full bg-itau-cardBg text-xs text-white px-3 py-2 rounded-xl border border-gray-800 focus:outline-none focus:border-itau-orange"></textarea>
+                </div>
+
+                <div class="pt-3 border-t border-gray-800 flex justify-end gap-2">
+                    <button type="button" @click="closeModal('goal')" class="px-4 py-2 rounded-xl bg-itau-cardBg text-xs text-gray-300">Cancelar</button>
+                    <button type="submit" class="px-4 py-2 rounded-xl bg-itau-orange text-xs text-white font-bold hover:bg-itau-orangeHover">Salvar Meta</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Editar Perfil -->
+    <div x-show="modals.editProfile" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm no-print" x-transition>
+        <div @click.outside="closeModal('editProfile')" class="bg-itau-darkNavy border border-itau-navy w-full max-w-xl rounded-2xl shadow-2xl p-6 space-y-4">
+            <div class="flex items-center justify-between border-b border-gray-800 pb-3">
+                <h3 class="text-base font-bold text-white flex items-center gap-2">
+                    <i data-lucide="user-cog" class="w-5 h-5 text-itau-orange"></i> Perfil & Visão Técnica
+                </h3>
+                <button @click="closeModal('editProfile')" class="text-gray-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+
+            <form @submit.prevent="saveProfile()" class="space-y-3">
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-300 mb-1">Nome</label>
+                        <input type="text" x-model="profile.name" required class="w-full bg-itau-cardBg text-xs text-white px-3 py-2 rounded-xl border border-gray-800">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-300 mb-1">Cargo</label>
+                        <input type="text" x-model="profile.role" required class="w-full bg-itau-cardBg text-xs text-white px-3 py-2 rounded-xl border border-gray-800">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-gray-300 mb-1">Visão de Carreira (Especialista/IC)</label>
+                    <textarea x-model="profile.longTermVision" rows="3" class="w-full bg-itau-cardBg text-xs text-white px-3 py-2 rounded-xl border border-gray-800"></textarea>
+                </div>
+
+                <div class="pt-3 border-t border-gray-800 flex justify-end gap-2">
+                    <button type="button" @click="closeModal('editProfile')" class="px-4 py-2 rounded-xl bg-itau-cardBg text-xs text-gray-300">Cancelar</button>
+                    <button type="submit" class="px-4 py-2 rounded-xl bg-itau-orange text-xs text-white font-bold hover:bg-itau-orangeHover">Atualizar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Registrar Log -->
+    <div x-show="modals.log" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm no-print" x-transition>
+        <div @click.outside="closeModal('log')" class="bg-itau-darkNavy border border-itau-navy w-full max-w-md rounded-2xl shadow-2xl p-6 space-y-4">
+            <div class="flex items-center justify-between border-b border-gray-800 pb-3">
+                <h3 class="text-base font-bold text-white flex items-center gap-2">
+                    <i data-lucide="plus-circle" class="w-5 h-5 text-emerald-400"></i> Registrar Entregável
+                </h3>
+                <button @click="closeModal('log')" class="text-gray-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+
+            <form @submit.prevent="saveLog()" class="space-y-3">
+                <div>
+                    <label class="block text-xs font-medium text-gray-300 mb-1">Título do Projeto / Entrega</label>
+                    <input type="text" x-model="newLog.title" required class="w-full bg-itau-cardBg text-xs text-white px-3 py-2 rounded-xl border border-gray-800">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-300 mb-1">Descrição e Impacto de Negócio</label>
+                    <textarea x-model="newLog.content" rows="3" required class="w-full bg-itau-cardBg text-xs text-white px-3 py-2 rounded-xl border border-gray-800"></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-300 mb-1">Tags (separadas por vírgula)</label>
+                    <input type="text" x-model="newLog.rawTags" placeholder="aws, step-functions, glue, data-mesh" class="w-full bg-itau-cardBg text-xs text-white px-3 py-2 rounded-xl border border-gray-800">
+                </div>
+                <div class="pt-3 border-t border-gray-800 flex justify-end gap-2">
+                    <button type="button" @click="closeModal('log')" class="px-4 py-2 rounded-xl bg-itau-cardBg text-xs text-gray-300">Cancelar</button>
+                    <button type="submit" class="px-4 py-2 rounded-xl bg-emerald-600 text-xs text-white font-bold hover:bg-emerald-500">Registrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Script Principal JS -->
+    <script>
+        function pdiExecutiveApp() {
+            return {
+                isPresentationMode: false,
+                selectedPillar: 'all',
+                selectedStatus: 'all',
+                searchQuery: '',
+
+                modals: { goal: false, editProfile: false, log: false },
+                toasts: [],
+
+                profile: {
+                    name: 'Nicolas Gomes',
+                    role: 'Data Engineer Senior / Especialista em Dados',
+                    track: 'Trilha Técnica (IC - Individual Contributor)',
+                    area: 'Engenharia de Dados • Itaú Unibanco',
+                    longTermVision: 'Evoluir continuamente como Especialista/IC na Trilha Técnica de Engenharia e Arquitetura de Dados no Itaú Unibanco. Foco absoluto no ecossistema Data Mesh, descentralização de Data Products com alta governança, arquitetura Serverless em nuvem AWS e máxima eficiência computacional.',
+                    strategicPillars: [
+                        { title: 'Arquitetura Data Mesh', description: 'Descentralização de pipelines, autonomia de domínios e criação de Data Products altamente governados.' },
+                        { title: 'Engenharia AWS Serverless', description: 'Uso avançado de AWS EventBridge, Step Functions, Glue Jobs e automação sem servidor.' },
+                        { title: 'Democratização & Governança', description: 'Eliminação de processos manuais e garantia de linhagem e histórico auditável de dados.' },
+                        { title: 'Performance & Otimização', description: 'Redução drástica do tempo de processamento e otimização de consumo de recursos AWS.' }
+                    ]
+                },
+
+                pillars: [
+                    { id: 'all', name: 'Todos os Pilares', icon: 'grid' },
+                    { id: 'Arquitetura AWS Serverless', name: 'AWS Serverless', icon: 'cloud' },
+                    { id: 'Data Mesh & Governança', name: 'Data Mesh', icon: 'network' },
+                    { id: 'Certificações AWS', name: 'Certificações AWS', icon: 'award' },
+                    { id: 'Performance & FinOps', name: 'Performance & Eficiência', icon: 'zap' }
+                ],
+
+                newGoal: {
+                    title: '',
+                    pillar: 'Arquitetura AWS Serverless',
+                    quarter: 'Q4 2026',
+                    kpi: '',
+                    description: '',
+                    tasks: [{ text: '', done: false }]
+                },
+
+                newLog: { title: '', content: '', rawTags: '' },
+
+                goals: [],
+                logs: [],
+
+                initApp() {
+                    const savedProfile = localStorage.getItem('nicolas_pdi_profile');
+                    const savedGoals = localStorage.getItem('nicolas_pdi_goals');
+                    const savedLogs = localStorage.getItem('nicolas_pdi_logs');
+
+                    if (savedProfile) this.profile = JSON.parse(savedProfile);
+
+                    if (savedGoals) {
+                        this.goals = JSON.parse(savedGoals);
+                    } else {
+                        this.goals = [
+                            {
+                                id: 1,
+                                title: 'Certificação AWS Solutions Architect - Associate (SAA-C03)',
+                                pillar: 'Certificações AWS',
+                                status: 'Em Andamento',
+                                quarter: 'Próximo Mês',
+                                kpi: 'Aprovação no exame oficial elevando a senioridade em arquitetura cloud',
+                                description: 'Reta final de preparação focada em padrões de resiliência, alta disponibilidade, custos e segurança na AWS.',
+                                tasks: [
+                                    { text: 'Concluir bateria final de simulados oficiais', done: true },
+                                    { text: 'Revisar tópicos de segurança e redes na AWS', done: true },
+                                    { text: 'Realizar o exame de certificação agendado', done: false }
+                                ]
+                            },
+                            {
+                                id: 2,
+                                title: 'Evolução e Expansão da Plataforma Planejado x Realizado na AWS',
+                                pillar: 'Arquitetura AWS Serverless',
+                                status: 'Em Andamento',
+                                quarter: 'Q4 2026',
+                                kpi: 'Suporte a novas fontes de dados de terceiros e otimização adicional do Glue Job',
+                                description: 'Manter a sustentabilidade da arquitetura moderna que reduziu o tempo de execução de 6h para 30min no AWS Step Functions.',
+                                tasks: [
+                                    { text: 'Validar integridade dos históricos de retrofits gerados', done: true },
+                                    { text: 'Implementar alertas de monitoramento de Glue Jobs via CloudWatch', done: false }
+                                ]
+                            },
+                            {
+                                id: 3,
+                                title: 'Padronização de Data Products no Modelo Data Mesh',
+                                pillar: 'Data Mesh & Governança',
+                                status: 'Planejado',
+                                quarter: 'Q1 2027',
+                                kpi: 'Contratos de dados definidos e publicação de metadados no catálogo corporativo',
+                                description: 'Garantir que todas as bases alimentadas pelo domínio tenham contratos de dados claros e reutilizáveis por outras áreas do banco.',
+                                tasks: [
+                                    { text: 'Mapear esquemas e schemas para publicação no catálogo', done: false },
+                                    { text: 'Definir regras de validação automática de dados na ingestão', done: false }
+                                ]
+                            }
+                        ];
+                        this.saveToStorage();
+                    }
+
+                    if (savedLogs) {
+                        this.logs = JSON.parse(savedLogs);
+                    } else {
+                        this.logs = [
+                            {
+                                id: 201,
+                                title: 'Modernização Completa do Projeto "Planejado x Realizado"',
+                                content: 'Migração de arquitetura on-premises fragilizada (Jenkins em máquina física com 16 fluxos e raspa-tela levando 6h) para AWS Serverless (EventBridge, Step Functions, Glue Jobs). O tempo caiu para no máximo 30 min, utilizando bases democratizadas e habilitando o histórico inédito de retrofits.',
+                                date: '2026-10-15',
+                                tags: ['aws', 'step-functions', 'glue', 'planejado-realizado', 'sucesso']
+                            },
+                            {
+                                id: 202,
+                                title: 'Renovação da Certificação AWS Certified Cloud Practitioner',
+                                content: 'Conclusão bem-sucedida da renovação da certificação Cloud Practitioner mantendo o selo AWS ativo e atualizado.',
+                                date: '2026-09-20',
+                                tags: ['aws', 'certificacao', 'cloud-practitioner']
+                            }
+                        ];
+                        this.saveToStorage();
+                    }
+
+                    this.refreshIcons();
+                },
+
+                refreshIcons() {
+                    this.$nextTick(() => {
+                        if (window.lucide) lucide.createIcons();
+                    });
+                },
+
+                get stats() {
+                    const total = this.goals.length;
+                    if (total === 0) return { total: 0, completed: 0, overallProgress: 0 };
+                    const completed = this.goals.filter(g => g.status === 'Concluído').length;
+                    const totalProgSum = this.goals.reduce((acc, g) => acc + this.calculateProgress(g), 0);
+                    return { total, completed, overallProgress: Math.round(totalProgSum / total) };
+                },
+
+                get filteredGoals() {
+                    return this.goals.filter(goal => {
+                        const matchPillar = this.selectedPillar === 'all' || goal.pillar === this.selectedPillar;
+                        const matchStatus = this.selectedStatus === 'all' || goal.status === this.selectedStatus;
+                        const matchQuery = this.searchQuery === '' || 
+                                           goal.title.toLowerCase().includes(this.searchQuery.toLowerCase()) || 
+                                           goal.description.toLowerCase().includes(this.searchQuery.toLowerCase());
+                        return matchPillar && matchStatus && matchQuery;
+                    });
+                },
+
+                calculateProgress(goal) {
+                    if (!goal.tasks || goal.tasks.length === 0) return goal.status === 'Concluído' ? 100 : 0;
+                    const done = goal.tasks.filter(t => t.done).length;
+                    return Math.round((done / goal.tasks.length) * 100);
+                },
+
+                toggleTask(goalId, taskIndex) {
+                    const goal = this.goals.find(g => g.id === goalId);
+                    if (goal && goal.tasks[taskIndex]) {
+                        goal.tasks[taskIndex].done = !goal.tasks[taskIndex].done;
+                        const prog = this.calculateProgress(goal);
+                        if (prog === 100) goal.status = 'Concluído';
+                        else if (prog > 0 && goal.status === 'Planejado') goal.status = 'Em Andamento';
+                        this.saveToStorage();
+                    }
+                },
+
+                updateGoalStatus(goalId, newStatus) {
+                    const goal = this.goals.find(g => g.id === goalId);
+                    if (goal) {
+                        goal.status = newStatus;
+                        if (newStatus === 'Concluído' && goal.tasks) {
+                            goal.tasks.forEach(t => t.done = true);
+                        }
+                        this.saveToStorage();
+                        this.showToast(`Status alterado para: ${newStatus}`, 'info');
+                    }
+                },
+
+                saveGoal() {
+                    if (!this.newGoal.title || !this.newGoal.kpi) return;
+                    const validTasks = this.newGoal.tasks.filter(t => t.text.trim() !== '');
+                    const created = {
+                        id: Date.now(),
+                        title: this.newGoal.title,
+                        pillar: this.newGoal.pillar,
+                        status: 'Em Andamento',
+                        quarter: this.newGoal.quarter,
+                        kpi: this.newGoal.kpi,
+                        description: this.newGoal.description,
+                        tasks: validTasks.length > 0 ? validTasks : [{ text: 'Finalizar desenvolvimento da meta', done: false }]
+                    };
+                    this.goals.unshift(created);
+                    this.saveToStorage();
+                    this.closeModal('goal');
+                    this.showToast('Nova meta cadastrada!', 'success');
+                    this.newGoal = { title: '', pillar: 'Arquitetura AWS Serverless', quarter: 'Q4 2026', kpi: '', description: '', tasks: [{ text: '', done: false }] };
+                },
+
+                saveProfile() {
+                    localStorage.setItem('nicolas_pdi_profile', JSON.stringify(this.profile));
+                    this.closeModal('editProfile');
+                    this.showToast('Perfil de Nicolas atualizado!', 'success');
+                },
+
+                saveLog() {
+                    if (!this.newLog.title || !this.newLog.content) return;
+                    const tagsArray = this.newLog.rawTags.split(',').map(t => t.trim().toLowerCase()).filter(t => t.length > 0);
+                    const log = {
+                        id: Date.now(),
+                        title: this.newLog.title,
+                        content: this.newLog.content,
+                        date: new Date().toISOString().split('T')[0],
+                        tags: tagsArray.length > 0 ? tagsArray : ['itau', 'aws']
+                    };
+                    this.logs.unshift(log);
+                    this.saveToStorage();
+                    this.closeModal('log');
+                    this.showToast('Conquista registrada com sucesso!', 'success');
+                    this.newLog = { title: '', content: '', rawTags: '' };
+                },
+
+                deleteGoal(id) {
+                    if (confirm('Deseja excluir esta meta do PDI?')) {
+                        this.goals = this.goals.filter(g => g.id !== id);
+                        this.saveToStorage();
+                        this.showToast('Meta removida.', 'warning');
+                    }
+                },
+
+                deleteLog(id) {
+                    this.logs = this.logs.filter(l => l.id !== id);
+                    this.saveToStorage();
+                    this.showToast('Registro removido.', 'warning');
+                },
+
+                saveToStorage() {
+                    localStorage.setItem('nicolas_pdi_goals', JSON.stringify(this.goals));
+                    localStorage.setItem('nicolas_pdi_logs', JSON.stringify(this.logs));
+                    localStorage.setItem('nicolas_pdi_profile', JSON.stringify(this.profile));
+                    this.refreshIcons();
+                },
+
+                togglePresentationMode() {
+                    this.isPresentationMode = !this.isPresentationMode;
+                    this.refreshIcons();
+                },
+
+                printPage() {
+                    window.print();
+                },
+
+                exportData() {
+                    const data = { profile: this.profile, goals: this.goals, logs: this.logs };
+                    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `PDI_NicolasGomes_Itau.json`;
+                    a.click();
+                },
+
+                importData(event) {
+                    const file = event.target.files[0];
+                    if (!file) return;
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        try {
+                            const imported = JSON.parse(e.target.result);
+                            if (imported.goals && imported.logs) {
+                                this.goals = imported.goals;
+                                this.logs = imported.logs;
+                                if (imported.profile) this.profile = imported.profile;
+                                this.saveToStorage();
+                                this.showToast('PDI de Nicolas importado com sucesso!', 'success');
+                            }
+                        } catch (err) {
+                            alert('Erro ao processar o arquivo JSON.');
+                        }
+                    };
+                    reader.readAsText(file);
+                },
+
+                resetData() {
+                    if (confirm('Deseja restaurar as configurações padrão com o case do Nicolas Gomes?')) {
+                        localStorage.removeItem('nicolas_pdi_goals');
+                        localStorage.removeItem('nicolas_pdi_logs');
+                        localStorage.removeItem('nicolas_pdi_profile');
+                        location.reload();
+                    }
+                },
+
+                openModal(type) { this.modals[type] = true; this.refreshIcons(); },
+                closeModal(type) { this.modals[type] = false; },
+
+                showToast(message, type = 'info') {
+                    const toast = { id: Date.now(), message, type, show: true };
+                    this.toasts.push(toast);
+                    setTimeout(() => { toast.show = false; }, 3000);
+                },
+
+                formatDate(dateStr) {
+                    if (!dateStr) return '';
+                    const parts = dateStr.split('-');
+                    return parts.length === 3 ? `${parts[2]}/${parts[1]}/${parts[0]}` : dateStr;
+                },
+
+                getPilarStyle(pillar) {
+                    switch (pillar) {
+                        case 'Arquitetura AWS Serverless': return 'bg-blue-500/10 text-blue-400 border-blue-500/30';
+                        case 'Data Mesh & Governança': return 'bg-purple-500/10 text-purple-400 border-purple-500/30';
+                        case 'Certificações AWS': return 'bg-amber-500/10 text-amber-400 border-amber-500/30';
+                        case 'Performance & FinOps': return 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30';
+                        default: return 'bg-gray-800 text-gray-300 border-gray-700';
+                    }
+                },
+
+                getPilarIcon(pillar) {
+                    switch (pillar) {
+                        case 'Arquitetura AWS Serverless': return 'cloud';
+                        case 'Data Mesh & Governança': return 'network';
+                        case 'Certificações AWS': return 'award';
+                        case 'Performance & FinOps': return 'zap';
+                        default: return 'tag';
+                    }
+                },
+
+                getStatusStyle(status) {
+                    switch (status) {
+                        case 'Concluído': return 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30';
+                        case 'Em Andamento': return 'bg-amber-500/10 text-amber-400 border-amber-500/30';
+                        case 'Planejado': return 'bg-slate-500/10 text-slate-400 border-slate-500/30';
+                        default: return 'bg-gray-800 text-gray-400 border-gray-700';
+                    }
+                }
+            };
+        }
+    </script>
 </body>
 </html>
