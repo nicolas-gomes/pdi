@@ -304,113 +304,73 @@
             <div class="flex items-center justify-between">
                 <div class="flex items-center gap-2">
                     <div class="w-2.5 h-6 bg-emerald-500 rounded-full"></div>
-                    <h2 class="text-xl font-extrabold text-white tracking-tight">Case em Destaque: Modernização "Planejado x Realizado"</h2>
+                    <h2 class="text-xl font-extrabold text-white tracking-tight">Cases em Destaque</h2>
                 </div>
-                <span class="text-xs bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-3 py-1 rounded-full font-mono font-bold">
-                    Engenharia AWS Serverless
-                </span>
+                <button x-show="!isPresentationMode" @click="openCaseStudyModal()" class="no-print inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold">
+                    <i data-lucide="plus" class="w-4 h-4"></i> Novo Case
+                </button>
             </div>
 
-            <div class="bg-gradient-to-br from-itau-cardBg via-itau-darkNavy to-itau-bbaDark border border-emerald-500/30 rounded-2xl p-6 shadow-2xl relative print-card space-y-6">
-                
-                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-800 pb-4">
-                    <div>
-                        <h3 class="text-lg font-bold text-white">Plataforma de Gestão de Horas de Terceiros de Tecnologia</h3>
-                        <p class="text-xs text-gray-300 mt-1">Modernização completa de arquitetura on-premises fragilizada para ambiente AWS Serverless de alta performance e governança.</p>
-                    </div>
-                </div>
-
-                <!-- Comparativo Antes vs Depois -->
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    
-                    <!-- ANTES -->
-                    <div class="bg-rose-950/20 border border-rose-500/30 p-4 rounded-xl space-y-3">
-                        <div class="flex items-center justify-between border-b border-rose-500/20 pb-2">
-                            <span class="text-xs font-bold uppercase text-rose-400 flex items-center gap-1.5">
-                                <i data-lucide="alert-triangle" class="w-4 h-4"></i>
-                                Cenário Legado (On-Premises)
-                            </span>
-                            <span class="text-[10px] text-rose-300 font-mono">Jenkins / Bare-Metal</span>
+            <div class="grid grid-cols-1 gap-5" x-show="caseStudies.length > 0">
+                <template x-for="caseStudy in caseStudies" :key="caseStudy.id">
+                    <article class="bg-gradient-to-br from-itau-cardBg via-itau-darkNavy to-itau-bbaDark border border-emerald-500/30 rounded-2xl p-6 shadow-2xl space-y-5 print-card">
+                        <div class="flex flex-col md:flex-row md:items-start justify-between gap-4 border-b border-gray-800 pb-4">
+                            <div>
+                                <p class="text-[10px] font-bold uppercase tracking-wider text-emerald-400" x-text="caseStudy.project"></p>
+                                <h3 class="text-lg font-bold text-white mt-1" x-text="caseStudy.title"></h3>
+                                <p class="text-xs text-gray-300 mt-1" x-text="caseStudy.summary"></p>
+                                <div class="flex flex-wrap gap-1.5 mt-3">
+                                    <template x-for="technology in caseStudy.technologies" :key="technology">
+                                        <span class="text-[10px] bg-blue-900/40 text-blue-300 px-2 py-0.5 rounded border border-blue-500/20" x-text="technology"></span>
+                                    </template>
+                                </div>
+                            </div>
+                            <div x-show="!isPresentationMode" class="no-print flex items-center gap-1 shrink-0">
+                                <button @click="editCaseStudy(caseStudy)" class="p-1.5 rounded-lg text-gray-400 hover:text-white" :aria-label="`Editar ${caseStudy.title}`" title="Editar case">
+                                    <i data-lucide="pencil" class="w-4 h-4"></i>
+                                </button>
+                                <button @click="deleteCaseStudy(caseStudy.id)" class="p-1.5 rounded-lg text-gray-400 hover:text-rose-400" :aria-label="`Excluir ${caseStudy.title}`" title="Excluir case">
+                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                </button>
+                            </div>
                         </div>
-                        <ul class="text-xs text-gray-300 space-y-2">
-                            <li class="flex items-start gap-2">
-                                <i data-lucide="x-circle" class="w-4 h-4 text-rose-400 mt-0.5 shrink-0"></i>
-                                <span><strong>Infraestrutura:</strong> Máquina física dedicada vulnerável a falhas e instabilidade.</span>
-                            </li>
-                            <li class="flex items-start gap-2">
-                                <i data-lucide="x-circle" class="w-4 h-4 text-rose-400 mt-0.5 shrink-0"></i>
-                                <span><strong>Complexidade:</strong> 16 fluxos fragmentados orquestrados no Jenkins.</span>
-                            </li>
-                            <li class="flex items-start gap-2">
-                                <i data-lucide="x-circle" class="w-4 h-4 text-rose-400 mt-0.5 shrink-0"></i>
-                                <span><strong>Ingestão:</strong> Dependência de planilhas manuais e scripts de "raspa tela" instáveis.</span>
-                            </li>
-                            <li class="flex items-start gap-2">
-                                <i data-lucide="x-circle" class="w-4 h-4 text-rose-400 mt-0.5 shrink-0"></i>
-                                <span><strong>Tempo de Execução:</strong> entre <strong>5h30m e 6h00m</strong>.</span>
-                            </li>
-                            <li class="flex items-start gap-2">
-                                <i data-lucide="x-circle" class="w-4 h-4 text-rose-400 mt-0.5 shrink-0"></i>
-                                <span><strong>Gap de Negócio:</strong> Ausência total de histórico de retrofits (ajustes retroativos).</span>
-                            </li>
-                        </ul>
-                    </div>
 
-                    <!-- DEPOIS -->
-                    <div class="bg-emerald-950/20 border border-emerald-500/40 p-4 rounded-xl space-y-3">
-                        <div class="flex items-center justify-between border-b border-emerald-500/20 pb-2">
-                            <span class="text-xs font-bold uppercase text-emerald-400 flex items-center gap-1.5">
-                                <i data-lucide="check-circle-2" class="w-4 h-4"></i>
-                                Nova Arquitetura AWS
-                            </span>
-                            <span class="text-[10px] text-emerald-300 font-mono">AWS Serverless</span>
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+                            <div class="bg-rose-950/20 border border-rose-500/30 p-4 rounded-xl space-y-2">
+                                <h4 class="text-xs font-bold uppercase text-rose-400">Desafio</h4>
+                                <template x-for="(item, index) in caseStudyLines(caseStudy.challenge)" :key="index">
+                                    <p class="text-xs text-gray-300 leading-relaxed" x-text="item"></p>
+                                </template>
+                            </div>
+                            <div class="bg-emerald-950/20 border border-emerald-500/40 p-4 rounded-xl space-y-2">
+                                <h4 class="text-xs font-bold uppercase text-emerald-400">Solução</h4>
+                                <template x-for="(item, index) in caseStudyLines(caseStudy.solution)" :key="index">
+                                    <p class="text-xs text-gray-300 leading-relaxed" x-text="item"></p>
+                                </template>
+                            </div>
                         </div>
-                        <ul class="text-xs text-gray-300 space-y-2">
-                            <li class="flex items-start gap-2">
-                                <i data-lucide="check" class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0"></i>
-                                <span><strong>Stack AWS:</strong> AWS EventBridge, AWS Step Functions e AWS Glue Jobs.</span>
-                            </li>
-                            <li class="flex items-start gap-2">
-                                <i data-lucide="check" class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0"></i>
-                                <span><strong>Simplificação:</strong> Redução de 16 para apenas <strong>7 fluxos otimizados</strong>.</span>
-                            </li>
-                            <li class="flex items-start gap-2">
-                                <i data-lucide="check" class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0"></i>
-                                <span><strong>Governança:</strong> Eliminação de raspa-tela; utilização de bases democratizadas.</span>
-                            </li>
-                            <li class="flex items-start gap-2">
-                                <i data-lucide="check" class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0"></i>
-                                <span><strong>Performance:</strong> Redução do tempo para <strong>máximo de 30 minutos</strong> (>90% de ganho).</span>
-                            </li>
-                            <li class="flex items-start gap-2">
-                                <i data-lucide="check" class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0"></i>
-                                <span><strong>Novo Recurso de Negócio:</strong> Histórico completo e auditável de <strong>retrofits</strong>.</span>
-                            </li>
-                        </ul>
-                    </div>
 
-                </div>
+                        <div class="bg-itau-darkNavy/80 border border-gray-800 rounded-xl p-4 space-y-2">
+                            <h4 class="text-xs font-bold uppercase text-amber-400">Resultados e impacto</h4>
+                            <template x-for="(item, index) in caseStudyLines(caseStudy.results)" :key="index">
+                                <p class="text-xs text-gray-300 leading-relaxed" x-text="item"></p>
+                            </template>
+                        </div>
 
-                <!-- Métricas de Impacto -->
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 pt-2">
-                    <div class="bg-itau-darkNavy p-3 rounded-xl border border-gray-800 text-center">
-                        <span class="text-[10px] text-gray-400 block uppercase">Tempo de Processamento</span>
-                        <span class="text-lg font-black text-emerald-400 font-mono">~6h ➔ 30min</span>
-                    </div>
-                    <div class="bg-itau-darkNavy p-3 rounded-xl border border-gray-800 text-center">
-                        <span class="text-[10px] text-gray-400 block uppercase">Consolidação de Fluxos</span>
-                        <span class="text-lg font-black text-itau-orange font-mono">16 ➔ 7</span>
-                    </div>
-                    <div class="bg-itau-darkNavy p-3 rounded-xl border border-gray-800 text-center">
-                        <span class="text-[10px] text-gray-400 block uppercase">Fonte de Dados</span>
-                        <span class="text-lg font-black text-blue-400 font-mono">100% Governança</span>
-                    </div>
-                    <div class="bg-itau-darkNavy p-3 rounded-xl border border-gray-800 text-center">
-                        <span class="text-[10px] text-gray-400 block uppercase">Histórico Retrofits</span>
-                        <span class="text-lg font-black text-amber-400 font-mono">Disponível</span>
-                    </div>
-                </div>
-
+                        <div x-show="caseStudy.metrics.length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                            <template x-for="metric in caseStudy.metrics" :key="metric.label">
+                                <div class="bg-itau-darkNavy p-3 rounded-xl border border-gray-800 text-center">
+                                    <span class="text-[10px] text-gray-400 block uppercase" x-text="metric.label"></span>
+                                    <span class="text-lg font-black text-emerald-400 font-mono" x-text="metric.value"></span>
+                                </div>
+                            </template>
+                        </div>
+                    </article>
+                </template>
+            </div>
+            <div x-show="caseStudies.length === 0" class="bg-itau-cardBg border border-itau-navy rounded-2xl p-8 text-center">
+                <p class="text-sm text-gray-300">Ainda não há cases cadastrados.</p>
+                <p class="text-xs text-gray-500 mt-1">Destaque projetos importantes com desafio, solução e resultados.</p>
             </div>
         </section>
 
@@ -655,6 +615,73 @@
         </section>
 
     </main>
+
+    <!-- Modal Case em Destaque -->
+    <div x-show="modals.caseStudy" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm no-print" x-transition>
+        <div @click.outside="closeModal('caseStudy')" class="bg-itau-darkNavy border border-itau-navy w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl shadow-2xl p-6 space-y-4">
+            <div class="flex items-center justify-between border-b border-gray-800 pb-3">
+                <h3 class="text-base font-bold text-white flex items-center gap-2">
+                    <i :data-lucide="editingCaseStudyId === null ? 'plus-circle' : 'pencil'" class="w-5 h-5 text-emerald-400"></i>
+                    <span x-text="editingCaseStudyId === null ? 'Novo Case em Destaque' : 'Editar Case em Destaque'"></span>
+                </h3>
+                <button @click="closeModal('caseStudy')" class="text-gray-400 hover:text-white" aria-label="Fechar">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <form @submit.prevent="saveCaseStudy()" class="space-y-3">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-300 mb-1">Projeto / contexto</label>
+                        <input type="text" x-model="newCaseStudy.project" required placeholder="Ex.: Plataforma Planejado x Realizado" class="w-full bg-itau-cardBg text-xs text-white px-3 py-2 rounded-xl border border-gray-800">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-300 mb-1">Título do case</label>
+                        <input type="text" x-model="newCaseStudy.title" required placeholder="Ex.: Modernização da plataforma de dados" class="w-full bg-itau-cardBg text-xs text-white px-3 py-2 rounded-xl border border-gray-800">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-300 mb-1">Resumo</label>
+                    <textarea x-model="newCaseStudy.summary" rows="2" required placeholder="Contextualize brevemente o projeto e seu propósito." class="w-full bg-itau-cardBg text-xs text-white px-3 py-2 rounded-xl border border-gray-800"></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-300 mb-1">Desafio (um item por linha)</label>
+                    <textarea x-model="newCaseStudy.challenge" rows="4" required placeholder="Descreva o problema, limitações e necessidades do negócio." class="w-full bg-itau-cardBg text-xs text-white px-3 py-2 rounded-xl border border-gray-800"></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-300 mb-1">Solução (um item por linha)</label>
+                    <textarea x-model="newCaseStudy.solution" rows="4" required placeholder="Descreva sua atuação, decisões e tecnologias utilizadas." class="w-full bg-itau-cardBg text-xs text-white px-3 py-2 rounded-xl border border-gray-800"></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-300 mb-1">Resultados e impacto (um item por linha)</label>
+                    <textarea x-model="newCaseStudy.results" rows="3" required placeholder="Registre resultados para o negócio e para a operação." class="w-full bg-itau-cardBg text-xs text-white px-3 py-2 rounded-xl border border-gray-800"></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-300 mb-1">Tecnologias (separadas por vírgula)</label>
+                    <input type="text" x-model="newCaseStudy.technologiesInput" placeholder="AWS Glue, Step Functions, EventBridge" class="w-full bg-itau-cardBg text-xs text-white px-3 py-2 rounded-xl border border-gray-800">
+                </div>
+                <div class="space-y-2">
+                    <div class="flex items-center justify-between">
+                        <label class="block text-xs font-medium text-gray-300">Métricas (opcional)</label>
+                        <button type="button" @click="newCaseStudy.metrics.push({label: '', value: ''})" class="text-xs text-itau-orange hover:underline">Adicionar métrica</button>
+                    </div>
+                    <template x-for="(metric, index) in newCaseStudy.metrics" :key="index">
+                        <div class="flex gap-2">
+                            <input type="text" x-model="metric.label" placeholder="Indicador (ex.: Tempo)" class="min-w-0 flex-1 bg-itau-cardBg text-xs text-white px-3 py-2 rounded-xl border border-gray-800">
+                            <input type="text" x-model="metric.value" placeholder="Resultado (ex.: 6h → 30min)" class="min-w-0 flex-1 bg-itau-cardBg text-xs text-white px-3 py-2 rounded-xl border border-gray-800">
+                            <button type="button" @click="newCaseStudy.metrics.splice(index, 1)" class="text-gray-500 hover:text-rose-400 p-1" aria-label="Remover métrica">
+                                <i data-lucide="x" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </template>
+                </div>
+                <div class="pt-3 border-t border-gray-800 flex justify-end gap-2">
+                    <button type="button" @click="closeModal('caseStudy')" class="px-4 py-2 rounded-xl bg-itau-cardBg text-xs text-gray-300">Cancelar</button>
+                    <button type="submit" class="px-4 py-2 rounded-xl bg-emerald-600 text-xs text-white font-bold hover:bg-emerald-500" x-text="editingCaseStudyId === null ? 'Cadastrar Case' : 'Salvar Alterações'"></button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <!-- Modal Nova/Editar Meta -->
     <div x-show="modals.goal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm no-print" x-transition>
@@ -974,9 +1001,11 @@
                 selectedPeriod: 'all',
                 searchQuery: '',
 
-                modals: { goal: false, certification: false, editProfile: false, log: false, tags: false },
+                modals: { goal: false, certification: false, editProfile: false, log: false, tags: false, caseStudy: false },
                 toasts: [],
                 editingGoalId: null,
+                editingCaseStudyId: null,
+                newCaseStudy: { project: '', title: '', summary: '', challenge: '', solution: '', results: '', technologiesInput: '', metrics: [] },
                 newTagInputs: { goals: '', history: '' },
                 tagManagement: { scope: null, original: '', renamed: '' },
                 editingCertificationId: null,
@@ -1011,6 +1040,7 @@
 
                 goals: [],
                 logs: [],
+                caseStudies: [],
                 certifications: [],
                 historyTags: [],
 
@@ -1020,6 +1050,7 @@
                     const savedGoalTags = localStorage.getItem('nicolas_pdi_goal_tags');
                     const savedLogs = localStorage.getItem('nicolas_pdi_logs');
                     const savedHistoryTags = localStorage.getItem('nicolas_pdi_history_tags');
+                    const savedCaseStudies = localStorage.getItem('nicolas_pdi_case_studies');
                     const savedCertifications = localStorage.getItem('nicolas_pdi_certifications');
 
                     this.newGoal.period = this.getCurrentPeriod();
@@ -1176,6 +1207,13 @@
                             }
                         ];
                         this.logs.forEach(log => log.tags.forEach(tag => this.registerHistoryTag(tag)));
+                        this.saveToStorage();
+                    }
+
+                    if (savedCaseStudies) {
+                        this.caseStudies = JSON.parse(savedCaseStudies);
+                    } else {
+                        this.caseStudies = [this.getDefaultCaseStudy()];
                         this.saveToStorage();
                     }
 
@@ -1349,6 +1387,102 @@
                         this.selectedLogTags.length === 0 ||
                         this.selectedLogTags.some(tag => (log.tags || []).includes(tag))
                     );
+                },
+
+                caseStudyLines(value) {
+                    return (value || '').split('\n').map(line => line.trim()).filter(Boolean);
+                },
+
+                createEmptyCaseStudy() {
+                    return { project: '', title: '', summary: '', challenge: '', solution: '', results: '', technologiesInput: '', metrics: [] };
+                },
+
+                getDefaultCaseStudy() {
+                    return {
+                        id: 'planejado-realizado-modernization',
+                        project: 'Plataforma de Gestão de Horas de Terceiros de Tecnologia',
+                        title: 'Modernização da plataforma Planejado x Realizado',
+                        summary: 'Modernização de uma arquitetura on-premises fragilizada para uma solução AWS Serverless com maior performance e governança.',
+                        challenge: [
+                            'Máquina física dedicada, vulnerável a falhas e instabilidade.',
+                            '16 fluxos fragmentados orquestrados no Jenkins.',
+                            'Dependência de planilhas manuais e scripts de raspagem de tela instáveis.',
+                            'Tempo de execução entre 5h30 e 6h.',
+                            'Ausência de histórico de retrofits (ajustes retroativos).'
+                        ].join('\n'),
+                        solution: [
+                            'Migração para AWS EventBridge, Step Functions e Glue Jobs.',
+                            'Consolidação de 16 fluxos em 7 fluxos otimizados.',
+                            'Eliminação de raspagem de tela e uso de bases democratizadas.',
+                            'Implementação de histórico completo e auditável de retrofits.'
+                        ].join('\n'),
+                        results: [
+                            'Tempo de processamento reduzido de até 6 horas para no máximo 30 minutos (mais de 90% de redução).',
+                            'Arquitetura simplificada, com menos fluxos para manter.',
+                            'Maior governança e disponibilidade de dados para o negócio.',
+                            'Histórico auditável de ajustes retroativos.'
+                        ].join('\n'),
+                        technologies: ['AWS EventBridge', 'AWS Step Functions', 'AWS Glue Jobs', 'Jenkins'],
+                        metrics: [
+                            { label: 'Tempo de processamento', value: '~6h → 30min' },
+                            { label: 'Consolidação de fluxos', value: '16 → 7' },
+                            { label: 'Fonte de dados', value: '100% governada' },
+                            { label: 'Histórico de retrofits', value: 'Disponível' }
+                        ]
+                    };
+                },
+
+                openCaseStudyModal() {
+                    this.editingCaseStudyId = null;
+                    this.newCaseStudy = this.createEmptyCaseStudy();
+                    this.openModal('caseStudy');
+                },
+
+                editCaseStudy(caseStudy) {
+                    this.editingCaseStudyId = caseStudy.id;
+                    this.newCaseStudy = {
+                        project: caseStudy.project || '',
+                        title: caseStudy.title || '',
+                        summary: caseStudy.summary || '',
+                        challenge: caseStudy.challenge || '',
+                        solution: caseStudy.solution || '',
+                        results: caseStudy.results || '',
+                        technologiesInput: (caseStudy.technologies || []).join(', '),
+                        metrics: (caseStudy.metrics || []).map(metric => ({ label: metric.label, value: metric.value }))
+                    };
+                    this.openModal('caseStudy');
+                },
+
+                saveCaseStudy() {
+                    const caseStudy = {
+                        id: this.editingCaseStudyId || Date.now(),
+                        project: this.newCaseStudy.project.trim(),
+                        title: this.newCaseStudy.title.trim(),
+                        summary: this.newCaseStudy.summary.trim(),
+                        challenge: this.newCaseStudy.challenge.trim(),
+                        solution: this.newCaseStudy.solution.trim(),
+                        results: this.newCaseStudy.results.trim(),
+                        technologies: [...new Set(this.newCaseStudy.technologiesInput.split(',').map(item => item.trim()).filter(Boolean))],
+                        metrics: this.newCaseStudy.metrics
+                            .map(metric => ({ label: metric.label.trim(), value: metric.value.trim() }))
+                            .filter(metric => metric.label && metric.value)
+                    };
+                    const existingIndex = this.caseStudies.findIndex(item => item.id === this.editingCaseStudyId);
+                    if (existingIndex >= 0) this.caseStudies.splice(existingIndex, 1, caseStudy);
+                    else this.caseStudies.unshift(caseStudy);
+                    this.saveToStorage();
+                    this.closeModal('caseStudy');
+                    this.showToast(this.editingCaseStudyId ? 'Case atualizado!' : 'Case cadastrado!', 'success');
+                    this.editingCaseStudyId = null;
+                    this.newCaseStudy = this.createEmptyCaseStudy();
+                },
+
+                deleteCaseStudy(id) {
+                    const caseStudy = this.caseStudies.find(item => item.id === id);
+                    if (!caseStudy || !confirm(`Excluir o case "${caseStudy.title}"?`)) return;
+                    this.caseStudies = this.caseStudies.filter(item => item.id !== id);
+                    this.saveToStorage();
+                    this.showToast('Case removido.', 'warning');
                 },
 
                 get availableGoalPeriods() {
@@ -1649,6 +1783,7 @@
                     localStorage.setItem('nicolas_pdi_goal_tags', JSON.stringify(this.goalTags));
                     localStorage.setItem('nicolas_pdi_logs', JSON.stringify(this.logs));
                     localStorage.setItem('nicolas_pdi_history_tags', JSON.stringify(this.historyTags));
+                    localStorage.setItem('nicolas_pdi_case_studies', JSON.stringify(this.caseStudies));
                     localStorage.setItem('nicolas_pdi_profile', JSON.stringify(this.profile));
                     localStorage.setItem('nicolas_pdi_certifications', JSON.stringify(this.certifications));
                     this.refreshIcons();
@@ -1664,7 +1799,7 @@
                 },
 
                 exportData() {
-                    const data = { profile: this.profile, goals: this.goals, goalTags: this.goalTags, logs: this.logs, historyTags: this.historyTags, certifications: this.certifications };
+                    const data = { profile: this.profile, goals: this.goals, goalTags: this.goalTags, logs: this.logs, historyTags: this.historyTags, caseStudies: this.caseStudies, certifications: this.certifications };
                     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
                     const url = URL.createObjectURL(blob);
                     const a = document.createElement('a');
@@ -1705,6 +1840,7 @@
                                     ? imported.historyTags.filter(tag => typeof tag === 'string' && tag.trim())
                                     : [];
                                 this.logs.forEach(log => log.tags.forEach(tag => this.registerHistoryTag(tag)));
+                                if (Array.isArray(imported.caseStudies)) this.caseStudies = imported.caseStudies;
                                 if (imported.profile) this.profile = imported.profile;
                                 if (Array.isArray(imported.certifications)) this.certifications = imported.certifications;
                                 this.saveToStorage();
@@ -1723,6 +1859,7 @@
                         localStorage.removeItem('nicolas_pdi_goal_tags');
                         localStorage.removeItem('nicolas_pdi_logs');
                         localStorage.removeItem('nicolas_pdi_history_tags');
+                        localStorage.removeItem('nicolas_pdi_case_studies');
                         localStorage.removeItem('nicolas_pdi_profile');
                         localStorage.removeItem('nicolas_pdi_certifications');
                         location.reload();
