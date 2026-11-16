@@ -383,8 +383,8 @@
                 <div class="flex items-center gap-2">
                     <div class="w-2.5 h-6 bg-itau-orange rounded-full"></div>
                     <div>
-                        <h2 class="text-xl font-extrabold text-white tracking-tight">Roadmap de Desenvolvimento Técnico</h2>
-                        <p class="text-xs text-gray-400">Objetivos focados em evolução de arquitetura AWS, Data Products e Governança.</p>
+                        <h2 class="text-xl font-extrabold text-white tracking-tight">Roadmap de Desenvolvimento Profissional</h2>
+                        <p class="text-xs text-gray-400">Objetivos de evolução em AWS, inglês e fundamentos técnicos de MLOps.</p>
                     </div>
                 </div>
 
@@ -1015,7 +1015,7 @@
                     name: 'Nicolas Gomes',
                     role: 'Engenheiro de Dados',
                     track: 'Evolução profissional',
-                    area: 'Engenharia de Dados • Itaú Unibanco',
+                    area: 'Itaú Unibanco',
                     longTermVision: 'Evoluir na carreira de Engenharia de Dados, ampliando minha autonomia para conduzir soluções de ponta a ponta e gerar resultados consistentes para o negócio. Para isso, quero fortalecer minha atuação em AWS e PySpark, qualidade e governança de dados, observabilidade e eficiência, demonstrando essa evolução por meio de entregas de impacto e resolução de problemas com autonomia crescente.',
                     strategicPillars: [
                         { title: 'Arquitetura Data Mesh', description: 'Descentralização de pipelines, autonomia de domínios e criação de Data Products altamente governados.' },
@@ -1043,6 +1043,67 @@
                 caseStudies: [],
                 certifications: [],
                 historyTags: [],
+
+                getEnglishRoadmapGoals() {
+                    return [
+                        {
+                            id: 'english-exp1-2026-s2',
+                            title: 'Curso de Inglês - Nível EXP1',
+                            tags: ['Inglês'],
+                            status: 'Em Andamento',
+                            period: '2026-S2',
+                            kpi: 'Concluir o nível EXP1 do curso de inglês',
+                            description: 'Curso iniciado no segundo semestre de 2026; acompanhar as aulas e atividades do nível EXP1.',
+                            tasks: [
+                                { text: 'Acompanhar as aulas do nível EXP1', done: false },
+                                { text: 'Concluir atividades e avaliações do nível EXP1', done: false }
+                            ]
+                        },
+                        {
+                            id: 'english-exp2-2027-s1',
+                            title: 'Curso de Inglês - Nível EXP2',
+                            tags: ['Inglês'],
+                            status: 'Planejado',
+                            period: '2027-S1',
+                            kpi: 'Iniciar o nível EXP2 no primeiro semestre de 2027',
+                            description: 'Continuidade do curso de inglês com início do nível EXP2 no primeiro semestre de 2027.',
+                            tasks: [
+                                { text: 'Iniciar as aulas do nível EXP2', done: false },
+                                { text: 'Acompanhar as atividades do nível EXP2', done: false }
+                            ]
+                        }
+                    ];
+                },
+
+                getMLOpsRoadmapGoal() {
+                    return {
+                        id: 'mlops-foundations-2027-s1',
+                        title: 'Fundamentos de Machine Learning e MLOps',
+                        tags: ['MLOps', 'Machine Learning'],
+                        status: 'Planejado',
+                        period: '2027-S1',
+                        kpi: 'Consolidar fundamentos teóricos e desenhar o ciclo de vida de um modelo',
+                        description: 'Estudar os conceitos de Machine Learning e MLOps antes de iniciar um laboratório prático.',
+                        tasks: [
+                            { text: 'Estudar treino, validação, teste, overfitting, data leakage e métricas', done: false },
+                            { text: 'Entender baseline, experimentos, reprodutibilidade e versionamento de dados e modelos', done: false },
+                            { text: 'Estudar pipelines de treino, model registry, CI/CD/CT, implantação e monitoramento', done: false },
+                            { text: 'Comparar inferência em lote e online, latência, drift, retreinamento e rollback', done: false },
+                            { text: 'Revisar linhagem, privacidade, viés e explicabilidade', done: false },
+                            { text: 'Desenhar o ciclo de vida de um modelo e documentar as decisões de arquitetura', done: false }
+                        ]
+                    };
+                },
+
+                getIUDataFlowAchievement() {
+                    return {
+                        id: 'iu-data-flow-reuse-2026-11-11',
+                        title: 'Reuso da plataforma IU Data Flow pelo portal 360i',
+                        content: 'Implementação do reuso da plataforma IU Data Flow, produto desenvolvido por outro time, para realizar o upload de arquivos para a conta Producer por meio do portal 360i.',
+                        date: '2026-11-11',
+                        tags: ['iu-data-flow', '360i', 'producer', 'reuso-plataforma']
+                    };
+                },
 
                 initApp() {
                     const savedProfile = localStorage.getItem('nicolas_pdi_profile');
@@ -1072,6 +1133,10 @@
                             this.profile.role = 'Engenheiro de Dados';
                             profileMigrated = true;
                         }
+                        if (this.profile.area === 'Engenharia de Dados • Itaú Unibanco') {
+                            this.profile.area = 'Itaú Unibanco';
+                            profileMigrated = true;
+                        }
                         if (this.profile.longTermVision === 'Evoluir continuamente como Especialista/IC na Trilha Técnica de Engenharia e Arquitetura de Dados no Itaú Unibanco. Foco absoluto no ecossistema Data Mesh, descentralização de Data Products com alta governança, arquitetura Serverless em nuvem AWS e máxima eficiência computacional.') {
                             this.profile.longTermVision = 'Evoluir na carreira de Engenharia de Dados, ampliando minha autonomia para conduzir soluções de ponta a ponta e gerar resultados consistentes para o negócio. Para isso, quero fortalecer minha atuação em AWS e PySpark, qualidade e governança de dados, observabilidade e eficiência, demonstrando essa evolução por meio de entregas de impacto e resolução de problemas com autonomia crescente.';
                             profileMigrated = true;
@@ -1093,17 +1158,30 @@
                         this.certifications = [{
                             id: 'cloud-practitioner-existing',
                             name: 'AWS Cloud Practitioner',
-                            startDate: '',
-                            endDate: '',
+                            startDate: '2026-09-02',
+                            endDate: '2029-09-02',
                             renewable: true,
                             renewals: []
                         }];
+                        shouldPersist = true;
+                    }
+                    const cloudPractitioner = this.certifications.find(certification => certification.name === 'AWS Cloud Practitioner');
+                    if (cloudPractitioner && !cloudPractitioner.startDate && !cloudPractitioner.endDate) {
+                        cloudPractitioner.startDate = '2026-09-02';
+                        cloudPractitioner.endDate = '2029-09-02';
                         shouldPersist = true;
                     }
 
                     if (savedGoals) {
                         this.goals = JSON.parse(savedGoals);
                         let goalsMigrated = false;
+                        const removedGoalTitles = new Set([
+                            'Evolução e Expansão da Plataforma Planejado x Realizado na AWS',
+                            'Padronização de Data Products no Modelo Data Mesh'
+                        ]);
+                        const savedGoalCount = this.goals.length;
+                        this.goals = this.goals.filter(goal => !removedGoalTitles.has(goal.title));
+                        if (this.goals.length !== savedGoalCount) goalsMigrated = true;
                         this.goals.forEach(goal => {
                             if (!goal.period) {
                                 goal.period = this.periodFromLegacyQuarter(goal.quarter);
@@ -1131,6 +1209,19 @@
                                 if (this.registerGoalTag(tag)) goalsMigrated = true;
                             });
                         });
+                        this.getEnglishRoadmapGoals().forEach(englishGoal => {
+                            if (!this.goals.some(goal => goal.id === englishGoal.id || goal.title === englishGoal.title)) {
+                                this.goals.push(englishGoal);
+                                englishGoal.tags.forEach(tag => this.registerGoalTag(tag));
+                                goalsMigrated = true;
+                            }
+                        });
+                        const mlopsGoal = this.getMLOpsRoadmapGoal();
+                        if (!this.goals.some(goal => goal.id === mlopsGoal.id || goal.title === mlopsGoal.title)) {
+                            this.goals.push(mlopsGoal);
+                            mlopsGoal.tags.forEach(tag => this.registerGoalTag(tag));
+                            goalsMigrated = true;
+                        }
                         if (goalsMigrated) shouldPersist = true;
                     } else {
                         this.goals = [
@@ -1148,32 +1239,8 @@
                                     { text: 'Realizar o exame de certificação agendado', done: false }
                                 ]
                             },
-                            {
-                                id: 2,
-                                title: 'Evolução e Expansão da Plataforma Planejado x Realizado na AWS',
-                                tags: ['Arquitetura AWS Serverless'],
-                                status: 'Em Andamento',
-                                period: '2026-S2',
-                                kpi: 'Suporte a novas fontes de dados de terceiros e otimização adicional do Glue Job',
-                                description: 'Manter a sustentabilidade da arquitetura moderna que reduziu o tempo de execução de 6h para 30min no AWS Step Functions.',
-                                tasks: [
-                                    { text: 'Validar integridade dos históricos de retrofits gerados', done: true },
-                                    { text: 'Implementar alertas de monitoramento de Glue Jobs via CloudWatch', done: false }
-                                ]
-                            },
-                            {
-                                id: 3,
-                                title: 'Padronização de Data Products no Modelo Data Mesh',
-                                tags: ['Data Mesh & Governança'],
-                                status: 'Planejado',
-                                period: '2027-S1',
-                                kpi: 'Contratos de dados definidos e publicação de metadados no catálogo corporativo',
-                                description: 'Garantir que todas as bases alimentadas pelo domínio tenham contratos de dados claros e reutilizáveis por outras áreas do banco.',
-                                tasks: [
-                                    { text: 'Mapear esquemas e schemas para publicação no catálogo', done: false },
-                                    { text: 'Definir regras de validação automática de dados na ingestão', done: false }
-                                ]
-                            }
+                            ...this.getEnglishRoadmapGoals(),
+                            this.getMLOpsRoadmapGoal()
                         ];
                         this.goals.forEach(goal => goal.tags.forEach(tag => this.registerGoalTag(tag)));
                         shouldPersist = true;
@@ -1197,6 +1264,17 @@
                                 if (this.registerHistoryTag(tag)) logsMigrated = true;
                             });
                         });
+                        const certificationRenewalLog = this.logs.find(log => log.title === 'Renovação da Certificação AWS Certified Cloud Practitioner');
+                        if (certificationRenewalLog && certificationRenewalLog.date === '2026-09-20') {
+                            certificationRenewalLog.date = '2026-09-02';
+                            logsMigrated = true;
+                        }
+                        const iuDataFlowAchievement = this.getIUDataFlowAchievement();
+                        if (!this.logs.some(log => log.id === iuDataFlowAchievement.id || log.title === iuDataFlowAchievement.title)) {
+                            this.logs.unshift(iuDataFlowAchievement);
+                            iuDataFlowAchievement.tags.forEach(tag => this.registerHistoryTag(tag));
+                            logsMigrated = true;
+                        }
                         if (logsMigrated) shouldPersist = true;
                     } else {
                         this.logs = [
@@ -1211,9 +1289,10 @@
                                 id: 202,
                                 title: 'Renovação da Certificação AWS Certified Cloud Practitioner',
                                 content: 'Conclusão bem-sucedida da renovação da certificação Cloud Practitioner mantendo o selo AWS ativo e atualizado.',
-                                date: '2026-09-20',
+                                date: '2026-09-02',
                                 tags: ['aws', 'certificacao', 'cloud-practitioner']
-                            }
+                            },
+                            this.getIUDataFlowAchievement()
                         ];
                         this.logs.forEach(log => log.tags.forEach(tag => this.registerHistoryTag(tag)));
                         shouldPersist = true;
